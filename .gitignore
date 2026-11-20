@@ -1,0 +1,24 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.DS_Store
+
+# Large or regenerable experiment outputs inside projects
+research/projects/*/09_experiments/logs/
+research/projects/*/09_experiments/external/
+research/projects/*/09_experiments/runs/
+*.pt
+*.pth
+*.npz
+*.log
+
+# LaTeX build files
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.out
+*.synctex.gz
+.pytest_cache/
