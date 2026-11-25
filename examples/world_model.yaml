@@ -1,0 +1,14 @@
+schema_version: 1
+task_id: hierarchical_world_model
+idea: "层级世界模型中的 multi-level optimization"
+target_venues: [NeurIPS, ICML, ICLR, CoRL]
+research_branch: auto
+metrics:
+  status: undecided
+  primary: null
+  secondary: []
+clarification_requirements:
+  - distinguish_representation_temporal_policy_and_planning_hierarchies
+  - distinguish_multiple_losses_alternating_updates_and_nested_solution_dependence
+  - identify_decision_signal_and_baseline
+  - evaluate_cross_task_reuse_if_claimed

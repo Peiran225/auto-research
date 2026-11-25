@@ -1,0 +1,6 @@
+template_version: compress_summary-v1
+task_type: compress_summary
+1. 输入材料中哪些事实、推断、假设和未知需要保留，才能让后续查询
+   回答同样的问题？保留原有 epistemic_status 与来源引用。
+2. 哪些内容是重复来源或复述，可以合并且不增加证据数量？
+3. 压缩后丢失了哪些信息？列为 unknown 或 omitted。

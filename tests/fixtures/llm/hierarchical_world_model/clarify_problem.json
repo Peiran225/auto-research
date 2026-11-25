@@ -1,0 +1,165 @@
+{
+  "answers": [
+    {
+      "question_id": "q1",
+      "statement": "The idea names hierarchical world models and multi-level optimization; it fixes neither which hierarchy, which levels are optimised, nor the decision signal.",
+      "epistemic_status": "fact",
+      "basis_type": "input_given"
+    },
+    {
+      "question_id": "q2",
+      "statement": "'Hierarchical' may mean representation, temporal, policy or planning hierarchy; 'multi-level optimization' may mean several losses, alternating updates, or nested solution dependence (bilevel).",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q1"
+      ]
+    },
+    {
+      "question_id": "q3",
+      "statement": "For the nested reading: upper variables x (high-level model), lower variables y (low-level model), lower solution map y*(x), finite-step approximation of y*; for the multi-loss reading there is no y*(x).",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q2"
+      ]
+    },
+    {
+      "question_id": "q4",
+      "statement": "The target conclusion is not given; branches: mechanism (nested dependence matters) vs empirical improvement claim.",
+      "epistemic_status": "fact",
+      "basis_type": "input_given"
+    },
+    {
+      "question_id": "q5",
+      "statement": "If nested dependence matters, nested and alternating training reach different solutions already on a toy two-level problem.",
+      "epistemic_status": "hypothesis",
+      "prediction": "different fixed points on a quadratic instance",
+      "falsification": "identical fixed points"
+    },
+    {
+      "question_id": "q6",
+      "statement": null,
+      "epistemic_status": "unknown",
+      "missing_information": "The decision signal (planning return vs prediction error), the baseline and whether cross-task reuse is claimed are unspecified; they require the user's goal and a live baseline check."
+    },
+    {
+      "question_id": "q7",
+      "statement": "Search terms: temporal abstraction world model, bilevel/nested world model training, multi-loss alternating world model training.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q2"
+      ]
+    }
+  ],
+  "payload": {
+    "interpretations": [
+      {
+        "id": "H1",
+        "description": "Temporal hierarchy: high-level model over abstract time, low-level over primitive steps (distinguish_representation_temporal_policy_and_planning_hierarchies).",
+        "status": "kept",
+        "target_conclusion": "mechanism"
+      },
+      {
+        "id": "M1",
+        "description": "Nested solution dependence: the high level is trained through the low level's solution map (distinguish_multiple_losses_alternating_updates_and_nested_solution_dependence).",
+        "status": "kept",
+        "variables": [
+          "x",
+          "y",
+          "y*(x)"
+        ],
+        "working_assumptions": [
+          "finite-step approximation of y*(x)"
+        ],
+        "target_conclusion": "mechanism"
+      },
+      {
+        "id": "M2",
+        "description": "Several losses minimised with alternating updates (no solution dependence).",
+        "status": "kept",
+        "target_conclusion": "baseline"
+      },
+      {
+        "id": "X",
+        "description": "Every hierarchical world model is a multi-level optimisation problem.",
+        "status": "rejected_too_broad",
+        "rejection_reason": "conflates network hierarchy with nested optimisation"
+      }
+    ],
+    "concepts": [
+      {
+        "canonical_name": "bilevel optimization",
+        "aliases": [
+          "nested optimization"
+        ],
+        "role": "candidate mechanism (solution dependence)"
+      },
+      {
+        "canonical_name": "temporal abstraction",
+        "aliases": [
+          "options"
+        ],
+        "role": "type of hierarchy"
+      },
+      {
+        "canonical_name": "world model",
+        "aliases": [
+          "learned dynamics model"
+        ],
+        "role": "object of study"
+      }
+    ],
+    "unknowns": [
+      {
+        "key": "decision_signal",
+        "question": "Which decision signal and baseline decide success (identify_decision_signal_and_baseline): planning return, not prediction error?",
+        "affects": [
+          "W1"
+        ],
+        "importance": "high",
+        "available_checks": [
+          {
+            "action_type": "search_literature",
+            "purpose": "information_gathering",
+            "inputs": {
+              "query": "hierarchical world model long-horizon planning baseline",
+              "requires_live": true
+            },
+            "cost": {
+              "search_queries": 1
+            }
+          }
+        ],
+        "missing_material": "a runnable baseline and the user's target task"
+      },
+      {
+        "key": "cross_task",
+        "question": "Is cross-task reuse claimed (evaluate_cross_task_reuse_if_claimed)? If so, which tasks are held out from method selection?",
+        "affects": [
+          "W1"
+        ],
+        "importance": "medium",
+        "available_checks": [],
+        "missing_material": "user intent"
+      }
+    ],
+    "metrics_status": "undecided",
+    "search_queries": [
+      {
+        "query": "hierarchical world model temporal abstraction planning",
+        "purpose": "bottleneck"
+      },
+      {
+        "query": "bilevel nested world model latent dynamics",
+        "purpose": "nearest"
+      },
+      {
+        "query": "multi-loss alternating updates world model training",
+        "purpose": "refuting"
+      },
+      {
+        "query": "bilevel nested hypergradient",
+        "purpose": "user_method_link"
+      }
+    ]
+  }
+}

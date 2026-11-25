@@ -1,0 +1,130 @@
+{
+  "answers": [
+    {
+      "question_id": "q1",
+      "statement": "The i.i.d. source (Observation 3) is nearest to the open-loop statement.",
+      "epistemic_status": "fact",
+      "basis_type": "source_report",
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_mdp_iid_marginalization",
+          "locator": "§2",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q2",
+      "statement": "Marginalisation covers the i.i.d. side; the persistent side under open-loop policies is not discussed.",
+      "epistemic_status": "fact",
+      "basis_type": "source_report",
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_mdp_iid_marginalization",
+          "locator": "§3",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q3",
+      "statement": "Under open-loop policies the per-step marginal alone determines the value, so the narrowed claim may be a direct consequence of linearity.",
+      "epistemic_status": "inference",
+      "premise_ids": [],
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_mdp_iid_marginalization",
+          "locator": "§2",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q4",
+      "statement": null,
+      "epistemic_status": "unknown",
+      "missing_information": "Whether this narrowed statement is stated anywhere needs a live search."
+    },
+    {
+      "question_id": "q5",
+      "statement": "The narrowed claim no longer depends on the information structure; its interest is limited.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q3"
+      ]
+    },
+    {
+      "question_id": "q6",
+      "statement": "No counterexample expected under open-loop policies.",
+      "epistemic_status": "hypothesis",
+      "prediction": "equal open-loop values on the finite family",
+      "falsification": "an instance with unequal open-loop values"
+    },
+    {
+      "question_id": "q7",
+      "statement": "A finite-family counterexample search would check it cheaply.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q6"
+      ]
+    },
+    {
+      "question_id": "q8",
+      "statement": "Keep as a narrow, low-value statement; useful mainly as a control for CAND-B.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q5"
+      ]
+    }
+  ],
+  "payload": {
+    "candidate_key": "CAND-A",
+    "claim_checks": [
+      {
+        "claim_id": "C1",
+        "status": "possibly_distinct",
+        "source_refs": [
+          "paper_fixture_mdp_iid_marginalization#§2"
+        ],
+        "conditions": [
+          "open-loop policies"
+        ],
+        "counterexample_status": "insufficient_evidence",
+        "checked_scope": "synthetic fixture papers"
+      }
+    ],
+    "assessments": [
+      {
+        "subject_key": "CAND-A",
+        "subject_type": "candidate",
+        "dimension": "scientific_value",
+        "state": "known",
+        "judgment": "low",
+        "evidence_refs": [
+          "paper_fixture_mdp_iid_marginalization#§2"
+        ],
+        "rationale": "close to a direct consequence of marginalisation"
+      },
+      {
+        "subject_key": "CAND-A",
+        "subject_type": "candidate",
+        "dimension": "novelty",
+        "state": "unknown",
+        "judgment": null,
+        "evidence_refs": [],
+        "rationale": "needs a live search"
+      },
+      {
+        "subject_key": "CAND-A",
+        "subject_type": "candidate",
+        "dimension": "feasibility",
+        "state": "known",
+        "judgment": "high",
+        "evidence_refs": [
+          "paper_fixture_mdp_bayes_adaptive#§3"
+        ],
+        "rationale": "finite check is cheap"
+      }
+    ]
+  }
+}

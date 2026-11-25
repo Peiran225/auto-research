@@ -1,0 +1,106 @@
+{
+  "answers": [
+    {
+      "question_id": "q1",
+      "statement": "The theory check is a model review of the derivation; it adds no independent evidence beyond the computation.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q2"
+      ]
+    },
+    {
+      "question_id": "q2",
+      "statement": "It applies to CAND-B v1 C1 (draft proof status).",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q1"
+      ]
+    },
+    {
+      "question_id": "q3",
+      "statement": null,
+      "epistemic_status": "unknown",
+      "missing_information": "Novelty of A v2 and B remains unknown; nothing changed it."
+    },
+    {
+      "question_id": "q4",
+      "statement": "No ranking change.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q3"
+      ]
+    },
+    {
+      "question_id": "q5",
+      "statement": "The narrowed CAND-A v2 still has a cheap open-loop check.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q4"
+      ]
+    },
+    {
+      "question_id": "q6",
+      "statement": "Run the eq_open counterexample search for CAND-A v2; cost: one pilot.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q5"
+      ]
+    },
+    {
+      "question_id": "q7",
+      "statement": "Not a duplicate: the revision changed the claim.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q6"
+      ]
+    },
+    {
+      "question_id": "q8",
+      "statement": "Continue.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q5"
+      ]
+    },
+    {
+      "question_id": "q9",
+      "statement": "No stop.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q8"
+      ]
+    }
+  ],
+  "payload": {
+    "new_evidence_refs": [],
+    "duplicate_evidence_refs": [],
+    "assessment_updates": [],
+    "ranking_changes": [],
+    "next_action": {
+      "action_type": "counterexample_search",
+      "purpose": "preliminary_check",
+      "target_unknown_key": "cex_A2",
+      "candidate_keys": [
+        "CAND-A"
+      ],
+      "inputs": {
+        "pilot_id": "mdp_counterexample",
+        "claim": "eq_open"
+      },
+      "expected_branches": [
+        {
+          "if": "holds",
+          "then": "finite support"
+        }
+      ],
+      "cost_cap": {
+        "pilots": 1
+      },
+      "why_now": "last cheap check before novelty becomes the only decisive unknown"
+    },
+    "stop_recommendation": {
+      "stop": false
+    },
+    "revision_proposals": []
+  }
+}

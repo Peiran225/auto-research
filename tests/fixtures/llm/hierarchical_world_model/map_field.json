@@ -1,0 +1,92 @@
+{
+  "answers": [
+    {
+      "question_id": "q1",
+      "statement": "Long-horizon planning with learned models is the bottleneck in the synthetic temporal-hierarchy source.",
+      "epistemic_status": "fact",
+      "basis_type": "source_report",
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_wm_temporal_hierarchy",
+          "locator": "§2",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q2",
+      "statement": "That source reports planning return and notes that prediction error did not track it, so prediction error alone would not support a planning claim.",
+      "epistemic_status": "fact",
+      "basis_type": "source_report",
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_wm_temporal_hierarchy",
+          "locator": "§2",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q3",
+      "statement": "The alternating-updates source and the bilevel source disagree in scope (single-level vs two-level) rather than in results.",
+      "epistemic_status": "inference",
+      "premise_ids": [],
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_wm_multiloss_alternating",
+          "locator": "§3",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q4",
+      "statement": "The idea maps to whether nested dependence between levels matters for planning; no source tests that directly.",
+      "epistemic_status": "inference",
+      "premise_ids": [],
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_wm_bilevel_meta",
+          "locator": "§3",
+          "read_scope": "partial_text"
+        }
+      ]
+    }
+  ],
+  "payload": {
+    "field_problems": [
+      {
+        "id": "WP1",
+        "problem": "Learned models for long-horizon planning",
+        "evidence_refs": [
+          "paper_fixture_wm_temporal_hierarchy#§2"
+        ],
+        "metrics": [
+          "planning return"
+        ],
+        "baselines": [
+          "flat world model"
+        ],
+        "status": "single_source"
+      },
+      {
+        "id": "WP2",
+        "problem": "How to train coupled levels (nested vs alternating)",
+        "evidence_refs": [
+          "paper_fixture_wm_bilevel_meta#§2",
+          "paper_fixture_wm_multiloss_alternating#§2"
+        ],
+        "metrics": [
+          "prediction error (insufficient for planning claims)"
+        ],
+        "baselines": [],
+        "status": "disputed"
+      }
+    ],
+    "idea_maps_to": [
+      "WP1",
+      "WP2"
+    ],
+    "missing_for_link": "no source tests nested training on planning return"
+  }
+}

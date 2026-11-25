@@ -1,0 +1,83 @@
+[
+  {
+    "claim_id": "claim_rev_CAND-A_v1_C1",
+    "statement": "For finite-horizon MDPs with a hidden reward parameter, fixed-per-episode and i.i.d.-per-step parameter uncertainty with the same marginal give the same optimal value under the same history-dependent policy class",
+    "scope": "general",
+    "status": "refuted",
+    "proof_status": "disproved",
+    "study_stage": "pilot",
+    "candidate_revision_id": "rev_CAND-A_v1",
+    "protocol": "proto_CAND-A@1",
+    "audit_status": "passed",
+    "audit_findings": [],
+    "usable_in_manuscript": true,
+    "links": [
+      {
+        "schema_version": 1,
+        "id": "lnk_18eb27805bffb78d",
+        "created_at": "2026-11-25T02:05:08+00:00",
+        "origin": "offline_local",
+        "source": "action:act_18eb27805a72d419",
+        "evidence_id": "ev_18eb27805bfa142d",
+        "candidate_revision_id": "rev_CAND-A_v1",
+        "claim_id": "C1",
+        "relation": "refutes",
+        "applicability": "verified counterexample satisfying the claim's assumptions (values)"
+      }
+    ]
+  },
+  {
+    "claim_id": "claim_rev_CAND-B_v1_C1",
+    "statement": "In the binary-action family with immediately observed rewards r_t = 1[a_t = theta_t], V*_B(history) equals V*_A(open-loop), so the gap V*_A(history) - V*_B(history) equals the value of using history in A",
+    "scope": "general",
+    "status": "unproven",
+    "proof_status": "draft",
+    "study_stage": "pilot",
+    "candidate_revision_id": "rev_CAND-B_v1",
+    "protocol": "proto_CAND-B@1",
+    "audit_status": "passed",
+    "audit_findings": [],
+    "usable_in_manuscript": true,
+    "links": [
+      {
+        "schema_version": 1,
+        "id": "lnk_18eb27806119051f",
+        "created_at": "2026-11-25T02:05:08+00:00",
+        "origin": "offline_local",
+        "source": "action:act_18eb27805d8b54bc",
+        "evidence_id": "ev_18eb27806114eed7",
+        "candidate_revision_id": "rev_CAND-B_v1",
+        "claim_id": "C1",
+        "relation": "supports",
+        "applicability": "finite-instance support only; does not prove the general statement"
+      }
+    ]
+  },
+  {
+    "claim_id": "claim_rev_CAND-A_v2_C1",
+    "statement": "Under history-independent (open-loop) policies, fixed-per-episode and i.i.d.-per-step parameter uncertainty with the same marginal give the same optimal value",
+    "scope": "general",
+    "status": "unproven",
+    "proof_status": "draft",
+    "study_stage": "pilot",
+    "candidate_revision_id": "rev_CAND-A_v2",
+    "protocol": "proto_CAND-A@2",
+    "audit_status": "passed",
+    "audit_findings": [],
+    "usable_in_manuscript": true,
+    "links": [
+      {
+        "schema_version": 1,
+        "id": "lnk_18eb27806816cf75",
+        "created_at": "2026-11-25T02:05:08+00:00",
+        "origin": "offline_local",
+        "source": "action:act_18eb278064e531c7",
+        "evidence_id": "ev_18eb27806811c8c0",
+        "candidate_revision_id": "rev_CAND-A_v2",
+        "claim_id": "C1",
+        "relation": "supports",
+        "applicability": "finite-instance support only; does not prove the general statement"
+      }
+    ]
+  }
+]

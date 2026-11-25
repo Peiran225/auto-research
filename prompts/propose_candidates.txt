@@ -1,0 +1,8 @@
+template_version: propose_candidates-v1
+task_type: propose_candidates
+1. 根据已记录的联系和限制，哪些尚未回答的具体问题值得检验？
+2. 每个候选的假设、机制、最近邻差异、可证伪预测、最低成本检查
+   以及放弃条件是什么？
+3. 哪些仍只是 hypothesis？
+4. 是否存在机制不同且有证据理由的备选？没有时说明原因，
+   不要为了凑数生成无依据方向，也不要把所有问题改写成 bilevel。

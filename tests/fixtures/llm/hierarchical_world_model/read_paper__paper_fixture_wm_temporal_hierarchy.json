@@ -1,0 +1,108 @@
+{
+  "answers": [
+    {
+      "question_id": "q1",
+      "statement": "Problem stated in §1.",
+      "epistemic_status": "fact",
+      "basis_type": "source_report",
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_wm_temporal_hierarchy",
+          "locator": "§1",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q2",
+      "statement": "Method / result in §2.",
+      "epistemic_status": "fact",
+      "basis_type": "source_report",
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_wm_temporal_hierarchy",
+          "locator": "§2",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q3",
+      "statement": "Contribution is the §2 statement; support type is a reported result, not reproduced here.",
+      "epistemic_status": "fact",
+      "basis_type": "source_report",
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_wm_temporal_hierarchy",
+          "locator": "§2",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q4",
+      "statement": "Scope and limitations in §3.",
+      "epistemic_status": "fact",
+      "basis_type": "source_report",
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_wm_temporal_hierarchy",
+          "locator": "§3",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q5",
+      "statement": null,
+      "epistemic_status": "unknown",
+      "missing_information": "Baselines, compute and exact numbers are not in the retrieved units (partial text)."
+    },
+    {
+      "question_id": "q6",
+      "statement": "Relevant as nearest neighbour or background; per-candidate links come later.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q2"
+      ]
+    },
+    {
+      "question_id": "q7",
+      "statement": "The limitation is stated in §3.",
+      "epistemic_status": "fact",
+      "basis_type": "source_report",
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_wm_temporal_hierarchy",
+          "locator": "§3",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q8",
+      "statement": "The experiments section (not retrieved) would give baselines and compute.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q5"
+      ]
+    }
+  ],
+  "payload": {
+    "paper_id": "paper_fixture_wm_temporal_hierarchy",
+    "reading_status": "partial",
+    "evidence": [
+      {
+        "locator": "§2",
+        "observation": "Planning return improved with temporal abstraction; prediction error did not track it (synthetic report, not reproduced)."
+      },
+      {
+        "locator": "§3",
+        "observation": "Limitation stated in §3 (synthetic)."
+      }
+    ],
+    "remaining_questions": [
+      "baselines and compute (not retrieved)"
+    ]
+  }
+}

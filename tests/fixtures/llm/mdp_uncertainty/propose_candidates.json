@@ -1,0 +1,301 @@
+{
+  "answers": [
+    {
+      "question_id": "q1",
+      "statement": "Open questions: whether the broad equivalence survives a small counterexample, whether the value gap is exactly the value of history, and whether the minimax link adds anything beyond the stated theorem.",
+      "epistemic_status": "inference",
+      "premise_ids": [],
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_mdp_bayes_adaptive",
+          "locator": "§2",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q2",
+      "statement": "Each candidate below lists its hypothesis, mechanism, nearest neighbours, a falsifiable prediction, the cheapest check and an abandon condition.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q1"
+      ]
+    },
+    {
+      "question_id": "q3",
+      "statement": "All three candidates are hypotheses until checked.",
+      "epistemic_status": "hypothesis",
+      "prediction": "the cheapest checks decide at least one of them",
+      "falsification": "all checks remain inconclusive within budget"
+    },
+    {
+      "question_id": "q4",
+      "statement": "CAND-C uses a different mechanism (worst-case objective) and is kept as an alternative; no further alternative has an evidence-based reason.",
+      "epistemic_status": "inference",
+      "premise_ids": [],
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_mdp_robust_rectangular",
+          "locator": "§2",
+          "read_scope": "partial_text"
+        }
+      ]
+    }
+  ],
+  "payload": {
+    "candidates": [
+      {
+        "key": "CAND-A",
+        "title": "Equivalence of fixed and i.i.d. parameter uncertainty under one history-dependent policy class",
+        "problem_scope": "finite-horizon MDPs with a hidden reward parameter; same marginal; same history-dependent policy class",
+        "hypothesis": "For finite-horizon MDPs with a hidden reward parameter, fixed-per-episode and i.i.d.-per-step parameter uncertainty with the same marginal give the same optimal value under the same history-dependent policy class",
+        "mechanism": "marginalising the parameter gives the same decision problem",
+        "increment": "a clean equivalence statement linking FP1 and FP3",
+        "nearest_neighbors": [
+          "paper_fixture_mdp_iid_marginalization",
+          "paper_fixture_mdp_bayes_adaptive"
+        ],
+        "claims": [
+          {
+            "id": "C1",
+            "scope": "general",
+            "check_key": "eq_history",
+            "statement": "For finite-horizon MDPs with a hidden reward parameter, fixed-per-episode and i.i.d.-per-step parameter uncertainty with the same marginal give the same optimal value under the same history-dependent policy class"
+          }
+        ],
+        "validation_protocol": {
+          "equivalence": "equal optimal value (working assumption)"
+        },
+        "abandon_conditions": [
+          "an exact counterexample satisfying the assumptions"
+        ],
+        "research_branch": "theoretical",
+        "cheapest_check": {
+          "action_type": "cpu_pilot",
+          "inputs": {
+            "pilot_id": "mdp_exact_enumeration"
+          }
+        }
+      },
+      {
+        "key": "CAND-B",
+        "title": "The value gap between fixed and i.i.d. parameters is the value of history",
+        "problem_scope": "binary actions, rewards r_t = 1[a_t = theta_t] observed immediately, any horizon and prior",
+        "hypothesis": "In the binary-action family with immediately observed rewards r_t = 1[a_t = theta_t], V*_B(history) equals V*_A(open-loop), so the gap V*_A(history) - V*_B(history) equals the value of using history in A",
+        "mechanism": "history informs future decisions only when the parameter persists",
+        "increment": "an exact characterisation of when the two uncertainty forms differ",
+        "nearest_neighbors": [
+          "paper_fixture_mdp_bayes_adaptive",
+          "paper_fixture_mdp_iid_marginalization"
+        ],
+        "claims": [
+          {
+            "id": "C1",
+            "scope": "general",
+            "check_key": "voi_identity",
+            "statement": "In the binary-action family with immediately observed rewards r_t = 1[a_t = theta_t], V*_B(history) equals V*_A(open-loop), so the gap V*_A(history) - V*_B(history) equals the value of using history in A"
+          },
+          {
+            "id": "C2",
+            "scope": "general",
+            "check_key": "b_no_history_gain",
+            "statement": "Under i.i.d. per-step parameters, history-dependent policies gain nothing over open-loop policies"
+          }
+        ],
+        "validation_protocol": {
+          "equivalence": "equal optimal value (working assumption)"
+        },
+        "abandon_conditions": [
+          "an instance in the family where V*_B(history) differs from V*_A(open-loop)"
+        ],
+        "research_branch": "theoretical",
+        "cheapest_check": {
+          "action_type": "counterexample_search",
+          "inputs": {
+            "pilot_id": "mdp_counterexample",
+            "claim": "voi_identity"
+          }
+        }
+      },
+      {
+        "key": "CAND-C",
+        "title": "Rectangular robust MDPs as minimax games (link to the user's minimax work)",
+        "problem_scope": "(s,a)-rectangular robust MDPs",
+        "hypothesis": "Robust value under rectangular sets equals a per-step minimax game value",
+        "mechanism": "nature's per-step adversarial choice",
+        "increment": "re-use of minimax analysis tools",
+        "nearest_neighbors": [
+          "paper_fixture_mdp_robust_rectangular"
+        ],
+        "claims": [
+          {
+            "id": "C1",
+            "scope": "general",
+            "statement": "Robust value under (s,a)-rectangular sets equals a per-step minimax game value"
+          }
+        ],
+        "validation_protocol": {},
+        "abandon_conditions": [
+          "the statement is already established"
+        ],
+        "research_branch": "theoretical",
+        "cheapest_check": {
+          "action_type": "check_candidate",
+          "inputs": {}
+        }
+      }
+    ],
+    "no_alternative_reason": null,
+    "unknowns": [
+      {
+        "key": "cex_A",
+        "question": "Does a small exact instance refute CAND-A C1?",
+        "affects": [
+          "CAND-A"
+        ],
+        "importance": "high",
+        "available_checks": [
+          {
+            "action_type": "cpu_pilot",
+            "purpose": "preliminary_check",
+            "inputs": {
+              "pilot_id": "mdp_exact_enumeration"
+            },
+            "cost": {
+              "pilots": 1
+            },
+            "can_disqualify": true,
+            "branches": [
+              {
+                "if": "optimal values differ",
+                "then": "CAND-A C1 refuted"
+              },
+              {
+                "if": "equal",
+                "then": "finite support only"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "key": "voi_B",
+        "question": "Does V*_B(history) = V*_A(open-loop) hold across the finite family?",
+        "affects": [
+          "CAND-B"
+        ],
+        "importance": "high",
+        "available_checks": [
+          {
+            "action_type": "counterexample_search",
+            "purpose": "preliminary_check",
+            "inputs": {
+              "pilot_id": "mdp_counterexample",
+              "claim": "voi_identity"
+            },
+            "cost": {
+              "pilots": 1
+            },
+            "can_disqualify": true,
+            "branches": [
+              {
+                "if": "counterexample",
+                "then": "CAND-B C1 refuted"
+              },
+              {
+                "if": "holds",
+                "then": "finite support; proof still needed"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "key": "proof_B",
+        "question": "Do the proof obligations for CAND-B C1 go through beyond the finite family?",
+        "affects": [
+          "CAND-B"
+        ],
+        "importance": "medium",
+        "available_checks": [
+          {
+            "action_type": "check_theory",
+            "purpose": "preliminary_check",
+            "inputs": {
+              "review": "derivation"
+            },
+            "cost": {
+              "llm_calls": 1
+            }
+          }
+        ]
+      },
+      {
+        "key": "cex_A2",
+        "question": "Does the open-loop restriction of CAND-A hold on the finite family?",
+        "affects": [
+          "CAND-A"
+        ],
+        "importance": "medium",
+        "available_checks": [
+          {
+            "action_type": "counterexample_search",
+            "purpose": "preliminary_check",
+            "inputs": {
+              "pilot_id": "mdp_counterexample",
+              "claim": "eq_open"
+            },
+            "cost": {
+              "pilots": 1
+            },
+            "can_disqualify": true
+          }
+        ]
+      },
+      {
+        "key": "novelty_A",
+        "question": "Is the (narrowed) CAND-A statement already known in the literature?",
+        "affects": [
+          "CAND-A"
+        ],
+        "importance": "high",
+        "available_checks": [
+          {
+            "action_type": "search_literature",
+            "purpose": "information_gathering",
+            "inputs": {
+              "query": "fixed versus iid parameter uncertainty open-loop policy equivalence",
+              "requires_live": true,
+              "purpose": "nearest"
+            },
+            "cost": {
+              "search_queries": 1
+            }
+          }
+        ]
+      },
+      {
+        "key": "novelty_B",
+        "question": "Is the value-of-history characterisation already known?",
+        "affects": [
+          "CAND-B"
+        ],
+        "importance": "high",
+        "available_checks": [
+          {
+            "action_type": "search_literature",
+            "purpose": "information_gathering",
+            "inputs": {
+              "query": "value of information history Bayes-adaptive versus iid parameters",
+              "requires_live": true,
+              "purpose": "nearest"
+            },
+            "cost": {
+              "search_queries": 1
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

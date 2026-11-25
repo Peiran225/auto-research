@@ -1,0 +1,118 @@
+{
+  "answers": [
+    {
+      "question_id": "q1",
+      "statement": "Theorem 2 (synthetic) states the rectangular robust MDP / per-step game equivalence.",
+      "epistemic_status": "fact",
+      "basis_type": "source_report",
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_mdp_robust_rectangular",
+          "locator": "§2",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q2",
+      "statement": "Under the same rectangularity assumption the source already covers the candidate's statement.",
+      "epistemic_status": "fact",
+      "basis_type": "source_report",
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_mdp_robust_rectangular",
+          "locator": "§2",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q3",
+      "statement": "The candidate restates Theorem 2 in minimax language; the difference is terminological.",
+      "epistemic_status": "inference",
+      "premise_ids": [],
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_mdp_robust_rectangular",
+          "locator": "§2",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q4",
+      "statement": "Within the searched (synthetic) scope no substantive difference remains.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q3"
+      ]
+    },
+    {
+      "question_id": "q5",
+      "statement": "The non-rectangular case is outside the statement and is flagged as hard.",
+      "epistemic_status": "fact",
+      "basis_type": "source_report",
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_mdp_robust_rectangular",
+          "locator": "§3",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q6",
+      "statement": "No counterexample is needed: the claim is covered, not refuted.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q2"
+      ]
+    },
+    {
+      "question_id": "q7",
+      "statement": "Nothing cheaper than the reading already done would change this.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q4"
+      ]
+    },
+    {
+      "question_id": "q8",
+      "statement": "Do not pursue CAND-C as stated; a non-rectangular variant would be a different candidate.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q5"
+      ]
+    }
+  ],
+  "payload": {
+    "candidate_key": "CAND-C",
+    "claim_checks": [
+      {
+        "claim_id": "C1",
+        "status": "covered",
+        "source_refs": [
+          "paper_fixture_mdp_robust_rectangular#§2"
+        ],
+        "conditions": [
+          "(s,a)-rectangularity"
+        ],
+        "counterexample_status": "none_found_in_scope",
+        "checked_scope": "synthetic fixture paper on rectangular robust MDPs (partial text)"
+      }
+    ],
+    "assessments": [
+      {
+        "subject_key": "CAND-C",
+        "subject_type": "candidate",
+        "dimension": "novelty",
+        "state": "known",
+        "judgment": "low",
+        "evidence_refs": [
+          "paper_fixture_mdp_robust_rectangular#§2"
+        ],
+        "rationale": "statement covered by Theorem 2 (synthetic)"
+      }
+    ]
+  }
+}

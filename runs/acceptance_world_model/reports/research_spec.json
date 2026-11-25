@@ -1,0 +1,47 @@
+[
+  {
+    "schema_version": 1,
+    "id": "spec_18eb277ff224f45e",
+    "created_at": "2026-11-25T02:05:06+00:00",
+    "origin": "fixture",
+    "source": "query:qr_18eb277ff2237838",
+    "study_stage": "pilot",
+    "candidate_revision_id": "rev_W1_v1",
+    "protocol_id": "proto_W1",
+    "protocol_version": 1,
+    "protocol_hash": "f2c949f6dd9c5f21a38146a904af5a04b0c848063b84ffa507644dccc254a5da",
+    "research_branch": "empirical",
+    "hypothesis": "On a two-level quadratic instance, nested (solution-dependent) training and alternating two-loss training reach different solutions, so the two readings of multi-level optimisation are distinct problems",
+    "falsification": "nested and alternating fixed points coincide",
+    "baselines": [
+      "alternating two-loss updates"
+    ],
+    "environment": {
+      "toy": "quadratic two-level problem"
+    },
+    "resources": {
+      "cpu_seconds": 10
+    },
+    "evaluation": {
+      "method": "closed form + gradient runs"
+    },
+    "continue_criteria": [
+      "fixed points differ"
+    ],
+    "abandon_criteria": [
+      "fixed points coincide"
+    ],
+    "theorem_statement": null,
+    "assumptions": [
+      "lower level strongly convex"
+    ],
+    "policy_information_class": null,
+    "proof_obligations": [],
+    "counterexample_search_plan": {
+      "pilot_id": "nested_vs_alternating"
+    },
+    "review_method": "closed-form check",
+    "missing": [],
+    "frozen": true
+  }
+]

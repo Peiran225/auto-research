@@ -1,0 +1,71 @@
+# Live template. Copy to configs/live.yaml, fill the paths and budgets, then run `pra doctor`.
+# Credentials are read from the environment only (see .env.example); never put them here.
+schema_version: 1
+mode: live
+llm:
+  provider: openai
+  api: responses
+  requested_product: "GPT-6 Pro — latest officially documented version"
+  model: gpt-6-astra
+  reasoning:
+    mode: pro
+  # effort is intentionally absent: the adapter sends no effort field (server default).
+  mapping_verified_on: "2026-11-24"
+  mapping_sources:
+    - https://help.openai.com/en/articles/20001354-gpt-6-and-other-models-in-chatgpt
+    - https://developers.openai.com/api/docs/models/gpt-6-astra
+    - https://developers.openai.com/api/docs/guides/reasoning#reasoning-mode
+  allow_task_overrides: false
+  fallback_models: []
+  freeze_binding_per_run: true
+  credential_env: OPENAI_API_KEY
+  request_timeout_seconds: 900
+  max_output_tokens_per_call: 8000
+  pricing:              # USD per 1M tokens; leave null if unknown -> usage is recorded as "unpriced"
+    input_per_mtok: null
+    output_per_mtok: null
+literature:
+  provider: arxiv        # arxiv | openalex
+  openalex_mailto_env: OPENALEX_MAILTO   # optional polite-pool contact, read from the environment
+  request_timeout_seconds: 30
+backend:
+  kind: ai_scientist_v3
+  inherit_frontend_llm: false
+  checkout: /path/to/AI-Scientist-v3          # pinned checkout
+  pinned_commit: f8ae47d324edcb6c0d430552f1c7729748c0d411
+  python: /path/to/AI-Scientist-v3/.venv/bin/python
+  agsci: /path/to/AI-Scientist-v3/.venv/bin/agsci
+  # v3's own agent and model; recorded separately, never derived from the llm block above.
+  agent:
+    name: null          # e.g. codex | claude  (must be filled for a real launch)
+    model: null
+    reasoning_effort: null
+  container_enabled: true
+  phases: [investigation, ablations, posthoc, paper]
+  max_idea_cycles: 2
+  workers: 1
+  num_replications: 1
+  harness_evaluation_timeout_seconds: 1800
+  require_strict_budget: [wall_seconds]   # dimensions that must be hard-capped by the backend
+decision:
+  strategy: personalized_loop
+limits:
+  max_rounds: 6
+  max_actions: 20
+  max_no_change_rounds: 2
+  max_retries_per_action: 1
+  max_candidates: 6
+  max_parallel_actions: 1
+  max_llm_calls: 40
+  max_input_tokens_total: 400000
+  max_output_tokens_total: 160000
+  max_search_queries: 24
+  max_full_text_reads: 12
+  max_pilots: 3
+  run_wall_seconds: 14400
+  action_wall_seconds: 3600
+  gpu_hours: 0
+  api_usd: 25        # must be > 0 for paid calls; usage that cannot be priced is marked unpriced
+reporting:
+  decision_language: zh
+  manuscript_language: en

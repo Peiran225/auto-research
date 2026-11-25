@@ -1,0 +1,56 @@
+[
+  {
+    "claim_id": "claim_rev_W1_v1_C1",
+    "statement": "On a two-level quadratic instance, nested (solution-dependent) training and alternating two-loss training reach different solutions, so the two readings of multi-level optimisation are distinct problems",
+    "scope": "finite_instance",
+    "status": "supported",
+    "proof_status": "draft",
+    "study_stage": "pilot",
+    "candidate_revision_id": "rev_W1_v1",
+    "protocol": "proto_W1@1",
+    "audit_status": "passed",
+    "audit_findings": [],
+    "usable_in_manuscript": true,
+    "links": [
+      {
+        "schema_version": 1,
+        "id": "lnk_18eb277ff2d19489",
+        "created_at": "2026-11-25T02:05:06+00:00",
+        "origin": "offline_local",
+        "source": "action:act_18eb277ff1bd13ec",
+        "evidence_id": "ev_18eb277ff2ce0e09",
+        "candidate_revision_id": "rev_W1_v1",
+        "claim_id": "C1",
+        "relation": "supports",
+        "applicability": "supports the claim within the computed scope"
+      }
+    ]
+  },
+  {
+    "claim_id": "claim_rev_W2_v1_C1",
+    "statement": "Alternating multi-loss updates reach the same solution as nested training, so nested optimisation adds nothing",
+    "scope": "general",
+    "status": "refuted",
+    "proof_status": "disproved",
+    "study_stage": "pilot",
+    "candidate_revision_id": "rev_W2_v1",
+    "protocol": "proto_W1@1",
+    "audit_status": "passed",
+    "audit_findings": [],
+    "usable_in_manuscript": true,
+    "links": [
+      {
+        "schema_version": 1,
+        "id": "lnk_18eb277ff2d58137",
+        "created_at": "2026-11-25T02:05:06+00:00",
+        "origin": "offline_local",
+        "source": "action:act_18eb277ff1bd13ec",
+        "evidence_id": "ev_18eb277ff2ce0e09",
+        "candidate_revision_id": "rev_W2_v1",
+        "claim_id": "C1",
+        "relation": "refutes",
+        "applicability": "verified counterexample satisfying the claim's assumptions (closed_form)"
+      }
+    ]
+  }
+]

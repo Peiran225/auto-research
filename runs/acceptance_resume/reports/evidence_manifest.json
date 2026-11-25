@@ -1,0 +1,116 @@
+{
+  "run_id": "acceptance_resume",
+  "execution_origin": "fixture",
+  "operation_status": "completed",
+  "planning_outcome": "inconclusive",
+  "research_outcome": "refuted",
+  "manuscript_status": "not_generated",
+  "expected_products": {
+    "decision_report.md": "present",
+    "research_note.md": "present",
+    "research_spec.json": "present",
+    "claim_evidence_map.json": "present",
+    "audit_report.md": "present",
+    "manuscript": "missing: manuscript_missing: no AI-Scientist-v3 paper phase ran in this run (local backend); only a deterministic research note was written",
+    "references.bib": "not_applicable: no verified live literature records",
+    "manuscript.tex": "not_generated: no upstream manuscript source",
+    "pdf": "not_generated: no manuscript source and no LaTeX toolchain in this environment"
+  },
+  "artifacts_sha256": {
+    "artifacts/act_18eb279ea45b0c94/_complete.json": "dc3cda12e32560d49099670f028c7144024d82b5a51d1f2b00624306c0655cfe",
+    "artifacts/act_18eb279ea45b0c94/mdp_policy_values.csv": "d3847c67bc09370e7dbb3c6cefed6ffb1da24c8c90217108bddfe9b6a7e4486a",
+    "artifacts/act_18eb279ea45b0c94/mdp_values.json": "7a51c34d5deb18a28af4ee994883d3d5d28df5c6b1b7a722a9fbf28fdd744382",
+    "artifacts/act_18eb279ea728071b/_complete.json": "d7242dbfb11172df3d78c847ccc259d764a11cfcc9a71358496a330828d49e01",
+    "artifacts/act_18eb279ea728071b/counterexample_search_voi_identity.json": "db5e2112d89f169172fcb155836597c19304081fc69c5015c54405996626a7c4"
+  },
+  "evidence": [
+    {
+      "id": "ev_18eb279e9edfc574",
+      "kind": "literature_report",
+      "namespace": "fixture",
+      "verification": "unverified",
+      "artifact": null,
+      "content_hash": "c4d70fa0abd0884d981f906f0f5186ebcaa22550cc94289edac8daa4d0c6b151"
+    },
+    {
+      "id": "ev_18eb279e9ee20832",
+      "kind": "literature_report",
+      "namespace": "fixture",
+      "verification": "unverified",
+      "artifact": null,
+      "content_hash": "5ced97bc98d20aeba59cc846ba42e4ef9c227136b097b3cd0cdfe4232fe8d08a"
+    },
+    {
+      "id": "ev_18eb279e9ee325d9",
+      "kind": "literature_report",
+      "namespace": "fixture",
+      "verification": "unverified",
+      "artifact": null,
+      "content_hash": "97d78561ab0c11f02b9623da10a997002bd337c711714edd4afb727f125296bc"
+    },
+    {
+      "id": "ev_18eb279e9f635b87",
+      "kind": "literature_report",
+      "namespace": "fixture",
+      "verification": "unverified",
+      "artifact": null,
+      "content_hash": "4914918840015efbbd7210ccb396707867aed2843f168e88b94da30ccc1b5bb6"
+    },
+    {
+      "id": "ev_18eb279e9f6556a0",
+      "kind": "literature_report",
+      "namespace": "fixture",
+      "verification": "unverified",
+      "artifact": null,
+      "content_hash": "7f1af28b7584cd149527930154118341fa201fe0e906036c9b5b158365937f5f"
+    },
+    {
+      "id": "ev_18eb279e9f664f2a",
+      "kind": "literature_report",
+      "namespace": "fixture",
+      "verification": "unverified",
+      "artifact": null,
+      "content_hash": "149e240058e3f0ca6d5605e489dc79e1350f470440d8ac0423d33ad277afbcd9"
+    },
+    {
+      "id": "ev_18eb279e9fda3087",
+      "kind": "literature_report",
+      "namespace": "fixture",
+      "verification": "unverified",
+      "artifact": null,
+      "content_hash": "67adafda5d05e9e2213708798b7f3e11a2c666b76984ca887fc52a2ff9c260d4"
+    },
+    {
+      "id": "ev_18eb279e9fdb9245",
+      "kind": "literature_report",
+      "namespace": "fixture",
+      "verification": "unverified",
+      "artifact": null,
+      "content_hash": "f26a7f01c3e4bac5716020b1ff76ea2f5041f8f2f2317e2c53b30893ed36f0b7"
+    },
+    {
+      "id": "ev_18eb279e9fdcae86",
+      "kind": "literature_report",
+      "namespace": "fixture",
+      "verification": "unverified",
+      "artifact": null,
+      "content_hash": "3c99951d238ceb08179d254933ceb305cabd4c5c0375beb811488388b92e89df"
+    },
+    {
+      "id": "ev_18eb279ea5ce7191",
+      "kind": "counterexample",
+      "namespace": "computation",
+      "verification": "verified",
+      "artifact": "artifacts/act_18eb279ea45b0c94/mdp_values.json",
+      "content_hash": "7a51c34d5deb18a28af4ee994883d3d5d28df5c6b1b7a722a9fbf28fdd744382"
+    },
+    {
+      "id": "ev_18eb279eb915cae9",
+      "kind": "computation",
+      "namespace": "computation",
+      "verification": "verified",
+      "artifact": "artifacts/act_18eb279ea728071b/counterexample_search_voi_identity.json",
+      "content_hash": "db5e2112d89f169172fcb155836597c19304081fc69c5015c54405996626a7c4"
+    }
+  ]
+}

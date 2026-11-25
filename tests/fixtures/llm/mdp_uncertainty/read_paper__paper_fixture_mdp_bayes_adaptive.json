@@ -1,0 +1,112 @@
+{
+  "answers": [
+    {
+      "question_id": "q1",
+      "statement": "The paper's problem is stated in §1 of the retrieved text.",
+      "epistemic_status": "fact",
+      "basis_type": "source_report",
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_mdp_bayes_adaptive",
+          "locator": "§1",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q2",
+      "statement": "The key statement, its variables and assumptions are in §2.",
+      "epistemic_status": "fact",
+      "basis_type": "source_report",
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_mdp_bayes_adaptive",
+          "locator": "§2",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q3",
+      "statement": "The claimed contribution is the statement in §2; it is supported by a proposition/theorem, not by experiments.",
+      "epistemic_status": "fact",
+      "basis_type": "source_report",
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_mdp_bayes_adaptive",
+          "locator": "§2",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q4",
+      "statement": "The statement's scope and limitations are given in §3; conditions outside them cannot be carried over directly.",
+      "epistemic_status": "fact",
+      "basis_type": "source_report",
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_mdp_bayes_adaptive",
+          "locator": "§3",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q5",
+      "statement": null,
+      "epistemic_status": "unknown",
+      "missing_information": "No experiments appear in the retrieved units §1-§3; whether the paper has experiments is unknown (read scope: partial text)."
+    },
+    {
+      "question_id": "q6",
+      "statement": "The statement bears on the candidates as background or as a nearest neighbour; links are made per candidate in later checks.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q2"
+      ]
+    },
+    {
+      "question_id": "q7",
+      "statement": "The paper states its own limitation in §3; any further limitation would be an inference.",
+      "epistemic_status": "fact",
+      "basis_type": "source_report",
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_mdp_bayes_adaptive",
+          "locator": "§3",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q8",
+      "statement": "Reading the full proof section (not retrieved) would settle whether the assumptions can be weakened.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q4"
+      ]
+    }
+  ],
+  "payload": {
+    "paper_id": "paper_fixture_mdp_bayes_adaptive",
+    "reading_status": "partial",
+    "evidence": [
+      {
+        "locator": "§1",
+        "observation": "Problem setting as stated in §1 (synthetic)."
+      },
+      {
+        "locator": "§2",
+        "observation": "History-dependent policies can exceed history-independent ones when the parameter is fixed per episode; the excess is attributed to the information history carries about theta (Proposition 1, synthetic)."
+      },
+      {
+        "locator": "§3",
+        "observation": "Scope / limitation stated in §3 (synthetic)."
+      }
+    ],
+    "remaining_questions": [
+      "proof details (not in the retrieved units)"
+    ]
+  }
+}

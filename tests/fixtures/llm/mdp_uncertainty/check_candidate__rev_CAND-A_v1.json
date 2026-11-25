@@ -1,0 +1,131 @@
+{
+  "answers": [
+    {
+      "question_id": "q1",
+      "statement": "Nearest synthetic sources: Proposition 1 (persistent parameters) and Observation 3 (i.i.d. marginalisation).",
+      "epistemic_status": "fact",
+      "basis_type": "source_report",
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_mdp_bayes_adaptive",
+          "locator": "§2",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q2",
+      "statement": "The i.i.d. source covers marginalisation only; it says nothing about persistent parameters.",
+      "epistemic_status": "fact",
+      "basis_type": "source_report",
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_mdp_iid_marginalization",
+          "locator": "§3",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q3",
+      "statement": "The difference is not a renaming: it concerns which information the policy can exploit.",
+      "epistemic_status": "inference",
+      "premise_ids": [],
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_mdp_bayes_adaptive",
+          "locator": "§2",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q4",
+      "statement": null,
+      "epistemic_status": "unknown",
+      "missing_information": "Only three synthetic fixture papers were 'searched'; whether the statement is new needs a live literature search."
+    },
+    {
+      "question_id": "q5",
+      "statement": "The candidate depends on the working equivalence definition (equal optimal value), which is not yet confirmed by the user.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q4"
+      ]
+    },
+    {
+      "question_id": "q6",
+      "statement": "A counterexample is plausible because history reveals a persistent parameter but not an i.i.d. one; it has not been constructed yet.",
+      "epistemic_status": "hypothesis",
+      "prediction": "two-step binary instance gives unequal optimal values",
+      "falsification": "equal optimal values on all small instances"
+    },
+    {
+      "question_id": "q7",
+      "statement": "The cheapest decisive check is an exact enumeration / finite-family counterexample search.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q6"
+      ]
+    },
+    {
+      "question_id": "q8",
+      "statement": "Keep the claim pending that check; do not widen its scope.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q7"
+      ]
+    }
+  ],
+  "payload": {
+    "candidate_key": "CAND-A",
+    "claim_checks": [
+      {
+        "claim_id": "C1",
+        "status": "unresolved",
+        "source_refs": [
+          "paper_fixture_mdp_iid_marginalization#§2",
+          "paper_fixture_mdp_bayes_adaptive#§2"
+        ],
+        "conditions": [
+          "same history-dependent policy class"
+        ],
+        "counterexample_status": "construction_to_check",
+        "checked_scope": "three synthetic fixture papers; no live search"
+      }
+    ],
+    "assessments": [
+      {
+        "subject_key": "CAND-A",
+        "subject_type": "candidate",
+        "dimension": "scientific_value",
+        "state": "known",
+        "judgment": "medium",
+        "evidence_refs": [
+          "paper_fixture_mdp_bayes_adaptive#§1"
+        ],
+        "rationale": "would connect FP1 and FP3 if true"
+      },
+      {
+        "subject_key": "CAND-A",
+        "subject_type": "candidate",
+        "dimension": "novelty",
+        "state": "unknown",
+        "judgment": null,
+        "evidence_refs": [],
+        "rationale": "no live search was run; unknown is not low"
+      },
+      {
+        "subject_key": "CAND-A",
+        "subject_type": "candidate",
+        "dimension": "feasibility",
+        "state": "known",
+        "judgment": "high",
+        "evidence_refs": [
+          "paper_fixture_mdp_bayes_adaptive#§3"
+        ],
+        "rationale": "small instances are solved exactly by enumeration"
+      }
+    ]
+  }
+}

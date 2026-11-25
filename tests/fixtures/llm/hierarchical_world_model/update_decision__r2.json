@@ -1,0 +1,85 @@
+{
+  "answers": [
+    {
+      "question_id": "q1",
+      "statement": "New: the toy pilot artifact reports different nested and alternating solutions.",
+      "epistemic_status": "fact",
+      "basis_type": "tool_observation",
+      "source_refs": [
+        {
+          "source_id": "artifact:nested_vs_alternating.json",
+          "locator": "closed_form"
+        }
+      ]
+    },
+    {
+      "question_id": "q2",
+      "statement": "Refutes W2 C1 (general) by counterexample; supports W1 C1 within the toy scope only.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q1"
+      ]
+    },
+    {
+      "question_id": "q3",
+      "statement": "W2 rejected; W1's planning claim (C2) is untouched.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q2"
+      ]
+    },
+    {
+      "question_id": "q4",
+      "statement": "W1 remains unresolved (novelty unknown, feasibility low without a backend).",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q3"
+      ]
+    },
+    {
+      "question_id": "q5",
+      "statement": "The decisive unknowns are a runnable baseline and the decision signal; both need live work or the user.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q4"
+      ]
+    },
+    {
+      "question_id": "q6",
+      "statement": null,
+      "epistemic_status": "unknown",
+      "missing_information": "No allowed offline action can check the baseline."
+    },
+    {
+      "question_id": "q7",
+      "statement": "Repeating the toy pilot would add nothing.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q1"
+      ]
+    },
+    {
+      "question_id": "q8",
+      "statement": "Stop as inconclusive; formal experiments belong to AI-Scientist-v3 once a baseline exists.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q5"
+      ]
+    },
+    {
+      "question_id": "q9",
+      "statement": "Next most valuable check: find a runnable hierarchical world-model baseline with a planning-return evaluator.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q8"
+      ]
+    }
+  ],
+  "payload": {
+    "next_action": null,
+    "stop_recommendation": {
+      "stop": true,
+      "planning_outcome": "inconclusive"
+    }
+  }
+}

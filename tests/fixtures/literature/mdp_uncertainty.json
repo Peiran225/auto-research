@@ -1,0 +1,79 @@
+[
+  {
+    "canonical_id": "fixture:mdp_bayes_adaptive",
+    "title": "[SYNTHETIC FIXTURE] Value of information in Bayes-adaptive MDPs",
+    "authors": [
+      "Synthetic Author A"
+    ],
+    "year": 2026,
+    "text_status": "partial_text",
+    "version": "fixture-v1",
+    "keywords": [
+      "bayes",
+      "adaptive",
+      "parameter",
+      "uncertainty",
+      "value",
+      "information",
+      "fixed",
+      "episode",
+      "belief"
+    ],
+    "abstract": "[SYNTHETIC FIXTURE] Persistent parameter uncertainty and the value of history.",
+    "units": {
+      "§1": "[SYNTHETIC FIXTURE] Problem. An agent faces an MDP whose reward parameter theta is unknown but fixed within an episode. It maintains a posterior over theta and acts on the belief state (Bayes-adaptive MDP).",
+      "§2": "[SYNTHETIC FIXTURE] Proposition 1. With a parameter fixed per episode, history-dependent policies can exceed history-independent policies; the excess equals the value of the information that past observations carry about theta. Assumptions: finite horizon, observed rewards, a prior shared by all policies.",
+      "§3": "[SYNTHETIC FIXTURE] Computation. Small finite instances are solved exactly by enumerating deterministic history policies; the cost grows doubly exponentially in the horizon."
+    }
+  },
+  {
+    "canonical_id": "fixture:mdp_robust_rectangular",
+    "title": "[SYNTHETIC FIXTURE] Rectangular robust MDPs as per-step games",
+    "authors": [
+      "Synthetic Author B"
+    ],
+    "year": 2025,
+    "text_status": "partial_text",
+    "version": "fixture-v1",
+    "keywords": [
+      "robust",
+      "rectangular",
+      "uncertainty",
+      "set",
+      "minimax",
+      "adversarial",
+      "game"
+    ],
+    "abstract": "[SYNTHETIC FIXTURE] Worst-case treatment of model uncertainty.",
+    "units": {
+      "§1": "[SYNTHETIC FIXTURE] Robust MDPs choose a policy against the worst transition model in an uncertainty set.",
+      "§2": "[SYNTHETIC FIXTURE] Theorem 2. Under (s,a)-rectangular uncertainty sets the robust MDP equals a zero-sum game in which nature picks the model adversarially at every step; the robust value is a minimax value.",
+      "§3": "[SYNTHETIC FIXTURE] Limitation. Without rectangularity the per-step game formulation does not hold and the problem can be computationally hard."
+    }
+  },
+  {
+    "canonical_id": "fixture:mdp_iid_marginalization",
+    "title": "[SYNTHETIC FIXTURE] Marginalising per-step i.i.d. parameters",
+    "authors": [
+      "Synthetic Author C"
+    ],
+    "year": 2024,
+    "text_status": "partial_text",
+    "version": "fixture-v1",
+    "keywords": [
+      "iid",
+      "per-step",
+      "independent",
+      "noise",
+      "marginal",
+      "transition",
+      "aleatoric"
+    ],
+    "abstract": "[SYNTHETIC FIXTURE] Per-step randomness integrated into the dynamics.",
+    "units": {
+      "§1": "[SYNTHETIC FIXTURE] When the parameter is redrawn independently at every step it can be integrated out of the dynamics.",
+      "§2": "[SYNTHETIC FIXTURE] Observation 3. Per-step i.i.d. parameters yield an ordinary MDP with averaged transitions and rewards; past observations carry no information about future parameters.",
+      "§3": "[SYNTHETIC FIXTURE] Scope. The statement concerns i.i.d. redraws only; it says nothing about parameters that persist over time."
+    }
+  }
+]

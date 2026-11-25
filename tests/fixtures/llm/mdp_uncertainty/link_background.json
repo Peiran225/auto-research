@@ -1,0 +1,153 @@
+{
+  "answers": [
+    {
+      "question_id": "q1",
+      "statement": "The profile states bilevel optimization, nonconvex minimax optimization, convergence analysis and optimization for ML (stated by the user, not verified against full text).",
+      "epistemic_status": "fact",
+      "basis_type": "input_given"
+    },
+    {
+      "question_id": "q2",
+      "statement": "A bottleneck in the field map is deciding when history carries decision-relevant information (single synthetic source).",
+      "epistemic_status": "fact",
+      "basis_type": "source_report",
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_mdp_bayes_adaptive",
+          "locator": "§2",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q3",
+      "statement": "Minimax structure maps onto rectangular robust MDPs: nature's per-step model choice is the inner maximisation, the policy the outer minimisation.",
+      "epistemic_status": "inference",
+      "premise_ids": [],
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_mdp_robust_rectangular",
+          "locator": "§2",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q4",
+      "statement": "The mapping needs (s,a)-rectangularity; without it the per-step game fails.",
+      "epistemic_status": "inference",
+      "premise_ids": [],
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_mdp_robust_rectangular",
+          "locator": "§3",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q5",
+      "statement": "If the link holds, the robust value equals a minimax value computable step by step.",
+      "epistemic_status": "hypothesis",
+      "prediction": "per-step game value equals robust value on rectangular instances",
+      "falsification": "a rectangular instance where they differ"
+    },
+    {
+      "question_id": "q6",
+      "statement": "The source already states the minimax link for rectangular sets, so this link may be covered rather than new.",
+      "epistemic_status": "inference",
+      "premise_ids": [],
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_mdp_robust_rectangular",
+          "locator": "§2",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q7",
+      "statement": "The value-of-information view of Bayes-adaptive MDPs is not in the profile and must be learned; its learning cost is recorded apart from its scientific value.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q1"
+      ]
+    },
+    {
+      "question_id": "q8",
+      "statement": "Taste rules TR1-TR4 are inferred from discussion and not confirmed; they act only as tie-breakers under their stated conditions.",
+      "epistemic_status": "fact",
+      "basis_type": "input_given"
+    }
+  ],
+  "payload": {
+    "correspondences": [
+      {
+        "profile_item": "nonconvex minimax optimization",
+        "mechanism_map": "outer policy minimisation vs nature's per-step maximisation in rectangular robust MDPs",
+        "conditions": [
+          "(s,a)-rectangularity"
+        ],
+        "status": "supported",
+        "evidence_refs": [
+          "paper_fixture_mdp_robust_rectangular#§2"
+        ]
+      },
+      {
+        "profile_item": "bilevel optimization",
+        "mechanism_map": "outer policy optimisation over an inner belief update in Bayes-adaptive planning",
+        "conditions": [
+          "belief update is a solution map of an inner problem"
+        ],
+        "status": "hypothesis",
+        "evidence_refs": []
+      }
+    ],
+    "assessments": [
+      {
+        "subject_key": "value of information",
+        "subject_type": "concept",
+        "dimension": "field_importance",
+        "state": "known",
+        "judgment": "high",
+        "evidence_refs": [
+          "paper_fixture_mdp_bayes_adaptive#§2"
+        ],
+        "rationale": "core quantity of FP1 (synthetic source)"
+      },
+      {
+        "subject_key": "robust MDP",
+        "subject_type": "concept",
+        "dimension": "field_importance",
+        "state": "known",
+        "judgment": "medium",
+        "evidence_refs": [
+          "paper_fixture_mdp_robust_rectangular#§2"
+        ],
+        "rationale": "relevant only for interpretation I2"
+      },
+      {
+        "subject_key": "minimax optimization",
+        "subject_type": "concept",
+        "dimension": "field_importance",
+        "state": "known",
+        "judgment": "medium",
+        "evidence_refs": [
+          "paper_fixture_mdp_robust_rectangular#§2"
+        ],
+        "rationale": "solution concept for FP2"
+      }
+    ],
+    "learning_tasks": [
+      {
+        "topic": "value of information / Bayes-adaptive MDPs",
+        "importance": "high",
+        "affects": [
+          "CAND-B"
+        ],
+        "why": "core quantity of FP1; no matching profile record"
+      }
+    ],
+    "taste_rules_applied": []
+  }
+}

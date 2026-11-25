@@ -1,0 +1,72 @@
+{
+  "answers": [
+    {
+      "question_id": "q1",
+      "statement": "The toy pilot tests only whether nested and alternating training differ; identical solutions would undercut W1's mechanism.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q3"
+      ]
+    },
+    {
+      "question_id": "q2",
+      "statement": "Baseline: alternating updates on the same quadratic; CPU only; no data.",
+      "epistemic_status": "fact",
+      "basis_type": "input_given"
+    },
+    {
+      "question_id": "q3",
+      "statement": "Frozen: quadratic instance and step sizes; the planning claim (C2) is out of scope and stays unknown.",
+      "epistemic_status": "fact",
+      "basis_type": "input_given"
+    },
+    {
+      "question_id": "q4",
+      "statement": "Continue only if the solutions differ; this is a precondition, not evidence for C2.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q3"
+      ]
+    },
+    {
+      "question_id": "q5",
+      "statement": "Local registered pilot; the formal planning experiment would be a v3 task once a baseline exists.",
+      "epistemic_status": "fact",
+      "basis_type": "input_given"
+    }
+  ],
+  "payload": {
+    "candidate_key": "W1",
+    "study_stage": "pilot",
+    "research_branch": "empirical",
+    "hypothesis": "On a two-level quadratic instance, nested (solution-dependent) training and alternating two-loss training reach different solutions, so the two readings of multi-level optimisation are distinct problems",
+    "falsification": "nested and alternating fixed points coincide",
+    "baselines": [
+      "alternating two-loss updates"
+    ],
+    "environment": {
+      "toy": "quadratic two-level problem"
+    },
+    "evaluation": {
+      "method": "closed form + gradient runs"
+    },
+    "resources": {
+      "cpu_seconds": 10
+    },
+    "continue_criteria": [
+      "fixed points differ"
+    ],
+    "abandon_criteria": [
+      "fixed points coincide"
+    ],
+    "theorem_statement": null,
+    "assumptions": [
+      "lower level strongly convex"
+    ],
+    "policy_information_class": null,
+    "proof_obligations": [],
+    "counterexample_search_plan": null,
+    "review_method": "closed-form check",
+    "missing": []
+  }
+}

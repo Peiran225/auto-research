@@ -1,0 +1,85 @@
+{
+  "answers": [
+    {
+      "question_id": "q1",
+      "statement": "Quantifiers: for all horizons H >= 1 and priors p in (0,1); binary actions; the same deterministic history-dependent policy class in A and B.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q2"
+      ]
+    },
+    {
+      "question_id": "q2",
+      "statement": "Obligations: O1 in A one reward reveals theta; O2 in B history is independent of future theta_t; O3 extension beyond binary actions with revealing rewards.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q1"
+      ]
+    },
+    {
+      "question_id": "q3",
+      "statement": "The finite-family computation agrees with O1 and O2 on every checked instance; it does not discharge the general case.",
+      "epistemic_status": "fact",
+      "basis_type": "tool_observation",
+      "source_refs": [
+        {
+          "source_id": "artifact:counterexample_search_voi_identity.json",
+          "locator": "instances"
+        }
+      ]
+    },
+    {
+      "question_id": "q4",
+      "statement": "No counterexample was found in the computed family.",
+      "epistemic_status": "fact",
+      "basis_type": "tool_observation",
+      "source_refs": [
+        {
+          "source_id": "artifact:counterexample_search_voi_identity.json",
+          "locator": "instances"
+        }
+      ]
+    },
+    {
+      "question_id": "q5",
+      "statement": "Proof status: draft (LLM review of the derivation sketch); numbers support instances only; O3 is open.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q3"
+      ]
+    }
+  ],
+  "payload": {
+    "candidate_key": "CAND-B",
+    "quantifiers": "for all H >= 1, p in (0,1)",
+    "policy_information_class": "deterministic history-dependent, identical in A and B",
+    "obligations": [
+      {
+        "id": "O1",
+        "statement": "In A the first reward reveals theta exactly",
+        "depends_on": [],
+        "status": "discharged_by_derivation",
+        "evidence_refs": []
+      },
+      {
+        "id": "O2",
+        "statement": "In B the history is independent of future theta_t",
+        "depends_on": [],
+        "status": "discharged_by_derivation",
+        "evidence_refs": []
+      },
+      {
+        "id": "O3",
+        "statement": "Extension beyond binary actions with revealing rewards",
+        "depends_on": [
+          "O1"
+        ],
+        "status": "open",
+        "evidence_refs": []
+      }
+    ],
+    "proof_status": "draft",
+    "review_method": "llm",
+    "counterexample_status": "none_found_in_scope"
+  }
+}

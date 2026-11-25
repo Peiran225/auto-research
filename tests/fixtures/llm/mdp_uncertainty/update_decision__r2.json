@@ -1,0 +1,149 @@
+{
+  "answers": [
+    {
+      "question_id": "q1",
+      "statement": "New: the exact enumeration artifact reports unequal optimal values for A and B under the same history-dependent class.",
+      "epistemic_status": "fact",
+      "basis_type": "tool_observation",
+      "source_refs": [
+        {
+          "source_id": "artifact:mdp_values.json",
+          "locator": "values"
+        }
+      ]
+    },
+    {
+      "question_id": "q2",
+      "statement": "It applies to CAND-A v1 C1 (refuted); a narrowed revision must re-check this evidence before using it.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q1"
+      ]
+    },
+    {
+      "question_id": "q3",
+      "statement": "CAND-A v1 is refuted; B's judgements are unchanged.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q1"
+      ]
+    },
+    {
+      "question_id": "q4",
+      "statement": "A v1 leaves the ranking; B stays unresolved on novelty.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q3"
+      ]
+    },
+    {
+      "question_id": "q5",
+      "statement": "For B the decisive unknown is whether the value-of-history identity survives the finite family; a counterexample search checks it.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q4"
+      ]
+    },
+    {
+      "question_id": "q6",
+      "statement": "Run the voi_identity counterexample search; a failure refutes B C1, success gives finite support; cost: one pilot.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q5"
+      ]
+    },
+    {
+      "question_id": "q7",
+      "statement": "Not a duplicate: different claim and inputs.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q6"
+      ]
+    },
+    {
+      "question_id": "q8",
+      "statement": "Continue: B has a cheap disqualifying check.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q5"
+      ]
+    },
+    {
+      "question_id": "q9",
+      "statement": "No stop.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q8"
+      ]
+    }
+  ],
+  "payload": {
+    "new_evidence_refs": [
+      "artifact:mdp_values.json"
+    ],
+    "duplicate_evidence_refs": [],
+    "assessment_updates": [],
+    "ranking_changes": [],
+    "next_action": {
+      "action_type": "counterexample_search",
+      "purpose": "preliminary_check",
+      "target_unknown_key": "voi_B",
+      "candidate_keys": [
+        "CAND-B"
+      ],
+      "inputs": {
+        "pilot_id": "mdp_counterexample",
+        "claim": "voi_identity"
+      },
+      "expected_branches": [
+        {
+          "if": "counterexample",
+          "then": "reject CAND-B"
+        },
+        {
+          "if": "holds",
+          "then": "finite support; theory check next"
+        }
+      ],
+      "cost_cap": {
+        "pilots": 1
+      },
+      "why_now": "only remaining cheap disqualifying check for an active candidate"
+    },
+    "stop_recommendation": {
+      "stop": false
+    },
+    "revision_proposals": [
+      {
+        "candidate_key": "CAND-A",
+        "change_reason": "C1 refuted by an exact counterexample under history-dependent policies; narrowed to the open-loop policy class",
+        "changes": {
+          "title": "Equivalence of fixed and i.i.d. parameter uncertainty under open-loop policies",
+          "hypothesis": "Under history-independent (open-loop) policies, fixed-per-episode and i.i.d.-per-step parameter uncertainty with the same marginal give the same optimal value",
+          "claims": [
+            {
+              "id": "C1",
+              "scope": "general",
+              "check_key": "eq_open",
+              "statement": "Under history-independent (open-loop) policies, fixed-per-episode and i.i.d.-per-step parameter uncertainty with the same marginal give the same optimal value"
+            }
+          ],
+          "problem_scope": "finite-horizon MDPs with a hidden reward parameter; same marginal; open-loop policies",
+          "validation_protocol": {
+            "equivalence": "equal optimal value (working assumption)",
+            "cheapest_check": {
+              "action_type": "counterexample_search",
+              "inputs": {
+                "pilot_id": "mdp_counterexample",
+                "claim": "eq_open"
+              }
+            }
+          }
+        },
+        "recheck_evidence_refs": [
+          "artifact:mdp_values.json"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "run_id": "acceptance_world_model",
+  "execution_origin": "fixture",
+  "operation_status": "completed",
+  "planning_outcome": "inconclusive",
+  "research_outcome": "not_run",
+  "manuscript_status": "not_generated",
+  "expected_products": {
+    "decision_report.md": "present",
+    "research_note.md": "present",
+    "research_spec.json": "present",
+    "claim_evidence_map.json": "present",
+    "audit_report.md": "present",
+    "manuscript": "missing: manuscript_missing: no AI-Scientist-v3 paper phase ran in this run (local backend); only a deterministic research note was written",
+    "references.bib": "not_applicable: no verified live literature records",
+    "manuscript.tex": "not_generated: no upstream manuscript source",
+    "pdf": "not_generated: no manuscript source and no LaTeX toolchain in this environment"
+  },
+  "artifacts_sha256": {
+    "artifacts/act_18eb277ff1bd13ec/_complete.json": "6ade5d11c4266779118600d3c5891ac8dc62877928180b14050d6640226d64de",
+    "artifacts/act_18eb277ff1bd13ec/nested_vs_alternating.json": "43d9322fcd7a49e56b3af5d30276baea1fd1db9c7e5b773b18565818b83a1a2a"
+  },
+  "evidence": [
+    {
+      "id": "ev_18eb277febbc918b",
+      "kind": "literature_report",
+      "namespace": "fixture",
+      "verification": "unverified",
+      "artifact": null,
+      "content_hash": "517356aef98e811971fd94b4fda669a9a451fd8c36f5d677cc197188bfb3d6f6"
+    },
+    {
+      "id": "ev_18eb277febbf8881",
+      "kind": "literature_report",
+      "namespace": "fixture",
+      "verification": "unverified",
+      "artifact": null,
+      "content_hash": "bd8a678be7018ef2080df0de584ad079841c52804d0b994c7192075789fdc58e"
+    },
+    {
+      "id": "ev_18eb277fec7bff4e",
+      "kind": "literature_report",
+      "namespace": "fixture",
+      "verification": "unverified",
+      "artifact": null,
+      "content_hash": "d1c62d50b28e7c6f67b5243b43cbbb59324a55fda814e21f448c61e182d98ded"
+    },
+    {
+      "id": "ev_18eb277fec7d6307",
+      "kind": "literature_report",
+      "namespace": "fixture",
+      "verification": "unverified",
+      "artifact": null,
+      "content_hash": "1d723cd2863fc3a9186d193fc847290bacf159db4828f5bb3ceb8acdc624b443"
+    },
+    {
+      "id": "ev_18eb277fed4aa2e0",
+      "kind": "literature_report",
+      "namespace": "fixture",
+      "verification": "unverified",
+      "artifact": null,
+      "content_hash": "6c621e627f2b36b142b8f9cb36d4e61b18da1a0b704ca136e97710a4f402ab81"
+    },
+    {
+      "id": "ev_18eb277fed4c8fa4",
+      "kind": "literature_report",
+      "namespace": "fixture",
+      "verification": "unverified",
+      "artifact": null,
+      "content_hash": "4e70b709e301b2825eab179af8604a5c77b3a283a41b920b3d68c0c01c55d75c"
+    },
+    {
+      "id": "ev_18eb277ff2ce0e09",
+      "kind": "counterexample",
+      "namespace": "computation",
+      "verification": "verified",
+      "artifact": "artifacts/act_18eb277ff1bd13ec/nested_vs_alternating.json",
+      "content_hash": "43d9322fcd7a49e56b3af5d30276baea1fd1db9c7e5b773b18565818b83a1a2a"
+    }
+  ]
+}

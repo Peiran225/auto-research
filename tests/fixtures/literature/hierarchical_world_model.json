@@ -1,0 +1,78 @@
+[
+  {
+    "canonical_id": "fixture:wm_temporal_hierarchy",
+    "title": "[SYNTHETIC FIXTURE] Temporal abstraction in hierarchical world models",
+    "authors": [
+      "Synthetic Author D"
+    ],
+    "year": 2026,
+    "text_status": "partial_text",
+    "version": "fixture-v1",
+    "keywords": [
+      "hierarchical",
+      "world",
+      "model",
+      "temporal",
+      "abstraction",
+      "planning",
+      "long-horizon"
+    ],
+    "abstract": "[SYNTHETIC FIXTURE] Temporal hierarchies for long-horizon planning.",
+    "units": {
+      "§1": "[SYNTHETIC FIXTURE] A high-level model predicts over abstract time steps while a low-level model predicts primitive steps.",
+      "§2": "[SYNTHETIC FIXTURE] Reported result. Long-horizon planning return improves with temporal abstraction; prediction error alone did not track planning return.",
+      "§3": "[SYNTHETIC FIXTURE] Limitation. Both levels are trained with separate losses and alternating updates; no solution dependence between levels is modelled."
+    }
+  },
+  {
+    "canonical_id": "fixture:wm_bilevel_meta",
+    "title": "[SYNTHETIC FIXTURE] Bilevel training of latent dynamics",
+    "authors": [
+      "Synthetic Author E"
+    ],
+    "year": 2025,
+    "text_status": "partial_text",
+    "version": "fixture-v1",
+    "keywords": [
+      "bilevel",
+      "nested",
+      "optimization",
+      "world",
+      "model",
+      "latent",
+      "dynamics",
+      "hypergradient"
+    ],
+    "abstract": "[SYNTHETIC FIXTURE] Nested optimisation for latent dynamics.",
+    "units": {
+      "§1": "[SYNTHETIC FIXTURE] The upper problem trains a representation; the lower problem fits latent dynamics given the representation.",
+      "§2": "[SYNTHETIC FIXTURE] Method. Hypergradients through the lower-level solution map are approximated with a finite number of inner steps.",
+      "§3": "[SYNTHETIC FIXTURE] Limitation. No planning benchmark is reported; only one-step prediction error."
+    }
+  },
+  {
+    "canonical_id": "fixture:wm_multiloss_alternating",
+    "title": "[SYNTHETIC FIXTURE] Multi-loss world-model training with alternating updates",
+    "authors": [
+      "Synthetic Author F"
+    ],
+    "year": 2024,
+    "text_status": "partial_text",
+    "version": "fixture-v1",
+    "keywords": [
+      "multi-loss",
+      "alternating",
+      "updates",
+      "world",
+      "model",
+      "training",
+      "losses"
+    ],
+    "abstract": "[SYNTHETIC FIXTURE] Several losses, alternating updates.",
+    "units": {
+      "§1": "[SYNTHETIC FIXTURE] Reconstruction, dynamics and reward losses are minimised by alternating gradient updates.",
+      "§2": "[SYNTHETIC FIXTURE] Claim. Alternating updates are reported to match joint training on the tested tasks.",
+      "§3": "[SYNTHETIC FIXTURE] Scope. Only single-level models were tested."
+    }
+  }
+]

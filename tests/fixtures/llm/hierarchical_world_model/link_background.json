@@ -1,0 +1,128 @@
+{
+  "answers": [
+    {
+      "question_id": "q1",
+      "statement": "Profile: bilevel optimization and convergence analysis (stated, not verified against full text).",
+      "epistemic_status": "fact",
+      "basis_type": "input_given"
+    },
+    {
+      "question_id": "q2",
+      "statement": "Bottleneck: training coupled levels; the bilevel source approximates hypergradients with finite inner steps.",
+      "epistemic_status": "fact",
+      "basis_type": "source_report",
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_wm_bilevel_meta",
+          "locator": "§2",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q3",
+      "statement": "Bilevel structure maps to: x = high-level model, y = low-level model, y*(x) = low-level fit; hypergradient methods from the user's work apply.",
+      "epistemic_status": "inference",
+      "premise_ids": [],
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_wm_bilevel_meta",
+          "locator": "§2",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q4",
+      "statement": "Needs an actual solution dependence; a network hierarchy trained with separate losses has none.",
+      "epistemic_status": "inference",
+      "premise_ids": [],
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_wm_multiloss_alternating",
+          "locator": "§1",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q5",
+      "statement": "If nested dependence matters, nested and alternating training reach different solutions.",
+      "epistemic_status": "hypothesis",
+      "prediction": "different fixed points on a toy instance",
+      "falsification": "same fixed point"
+    },
+    {
+      "question_id": "q6",
+      "statement": "If alternating training reaches the same solution, the bilevel view is unnecessary.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q5"
+      ]
+    },
+    {
+      "question_id": "q7",
+      "statement": "Learning cost: world-model planning benchmarks (not in the profile); value assessed separately.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q1"
+      ]
+    },
+    {
+      "question_id": "q8",
+      "statement": "Taste rules are inferred, unconfirmed tie-breakers only.",
+      "epistemic_status": "fact",
+      "basis_type": "input_given"
+    }
+  ],
+  "payload": {
+    "correspondences": [
+      {
+        "profile_item": "bilevel optimization",
+        "mechanism_map": "x = high-level model, y = low-level model, y*(x) = low-level solution map; hypergradient via finite inner steps",
+        "conditions": [
+          "actual solution dependence between levels"
+        ],
+        "status": "hypothesis",
+        "evidence_refs": [
+          "paper_fixture_wm_bilevel_meta#§2"
+        ]
+      }
+    ],
+    "assessments": [
+      {
+        "subject_key": "bilevel optimization",
+        "subject_type": "concept",
+        "dimension": "field_importance",
+        "state": "known",
+        "judgment": "medium",
+        "evidence_refs": [
+          "paper_fixture_wm_bilevel_meta#§2"
+        ],
+        "rationale": "one candidate mechanism for WP2"
+      },
+      {
+        "subject_key": "world model",
+        "subject_type": "concept",
+        "dimension": "field_importance",
+        "state": "known",
+        "judgment": "high",
+        "evidence_refs": [
+          "paper_fixture_wm_temporal_hierarchy#§2"
+        ],
+        "rationale": "object of WP1"
+      }
+    ],
+    "learning_tasks": [
+      {
+        "topic": "world-model planning benchmarks and baselines",
+        "importance": "high",
+        "affects": [
+          "W1"
+        ],
+        "why": "needed to test any planning claim"
+      }
+    ],
+    "taste_rules_applied": []
+  }
+}

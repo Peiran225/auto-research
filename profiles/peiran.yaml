@@ -1,0 +1,68 @@
+schema_version: 1
+profile_id: peiran
+researcher: Peiran Yu
+# Every record carries its source and scope. "verified: false" means the capability was not
+# checked against paper full text; it must not be used as a verified theoretical capability.
+expertise:
+  - name: optimization
+    scope: general continuous optimization for machine learning
+    source: user_context_2026-11-24
+    verified: false
+  - name: bilevel optimization
+    scope: stochastic / federated / Hessian-free bilevel methods and their convergence
+    source: user_context_2026-11-24
+    supporting_titles_source: research/profile/scholar_papers.json   # Scholar metadata only, full text not read
+    verified: false
+  - name: nonconvex minimax optimization
+    scope: federated minimax methods and convergence guarantees
+    source: user_context_2026-11-24
+    supporting_titles_source: research/profile/scholar_papers.json
+    verified: false
+  - name: convergence analysis
+    scope: nonconvex rates, KL-property sequence convergence, generalized smoothness, shuffling methods
+    source: user_context_2026-11-24
+    supporting_titles_source: research/profile/scholar_papers.json
+    verified: false
+  - name: optimization for machine learning
+    scope: zeroth-order methods, LLM fine-tuning algorithms
+    source: user_context_2026-11-24
+    verified: false
+  - name: multimodal learning
+    scope: stated by the user; no supporting publication metadata found in the Scholar listing
+    source: user_context_2026-11-24
+    verified: false
+research_interests:
+  - name: hierarchical world models
+    status: recent_exploration
+    source: user_context_2026-11-24
+  - name: MDP uncertainty
+    status: recent_exploration
+    source: user_context_2026-11-24
+  - name: personalized research agents
+    status: recent_exploration
+    source: user_context_2026-11-24
+taste_rules:
+  # Conditional preferences inferred from discussion; not trained, not confirmed rule by rule.
+  - id: TR1
+    rule: prefer candidates with an explicit mechanism over purely empirical improvements
+    applies_when: two candidates are otherwise tied on scientific value and feasibility
+    source: inferred_from_discussion
+    confirmed_by_user: false
+  - id: TR2
+    rule: prefer comparisons under aligned conditions (same data, budget, policy class)
+    applies_when: choosing a validation protocol
+    source: inferred_from_discussion
+    confirmed_by_user: false
+  - id: TR3
+    rule: prefer claims whose scope matches the available evidence
+    applies_when: deciding how broadly to state a result
+    source: inferred_from_discussion
+    confirmed_by_user: false
+  - id: TR4
+    rule: prefer results that guide later choices (conditions, counterexamples) over isolated numbers
+    applies_when: two candidates are otherwise tied
+    source: inferred_from_discussion
+    confirmed_by_user: false
+# Deliberately not stored as global preferences: deadline-driven decisions to run fewer
+# experiments or compress a paper. Resource limits live in the run config, not here.
+constraints: []
