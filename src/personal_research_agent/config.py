@@ -1,6 +1,7 @@
 """Config, task and profile loading with validation (plan §3)."""
 from __future__ import annotations
 
+import re
 from pathlib import Path
 from typing import Any, Literal, Optional
 
@@ -11,6 +12,7 @@ from .models import ProfileItem, ResearcherProfile, TasteRule, ExecutionOrigin, 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 PINNED_V3_COMMIT = "f8ae47d324edcb6c0d430552f1c7729748c0d411"
+OFFICIAL_PRO_MODEL = "gpt-6-astra"     # documented GPT-6 Pro mapping as of 2026-11-24 (plan §2.1)
 
 
 class ConfigError(ValueError):
@@ -53,6 +55,14 @@ class LLMConfig(BaseModel):
     request_timeout_seconds: float = 900
     max_output_tokens_per_call: int = 8000
     pricing: dict[str, Optional[float]] = {}
+    # Explicit, recorded deviation from the documented mapping (e.g. gpt-6.2-astra). Still one model
+    # per run, Pro mode required, no fallback; the binding marks it as a user choice.
+    user_model_override: bool = False
+    override_reason: Optional[str] = None
+
+    @property
+    def is_official_mapping(self) -> bool:
+        return self.model == OFFICIAL_PRO_MODEL
 
     @model_validator(mode="after")
     def _gpt6_pro(self) -> "LLMConfig":
@@ -63,8 +73,14 @@ class LLMConfig(BaseModel):
         # The unified binding of plan §2.1. Anything else is a configuration error, not a choice.
         if self.api != "responses":
             raise ConfigError("llm.api must be 'responses'")
-        if self.model != "gpt-6-astra":
-            raise ConfigError("llm.model must be gpt-6-astra (official GPT-6 Pro mapping, plan §2.1)")
+        if not self.model or not re.fullmatch(r"[a-z0-9][a-z0-9.\-]*", self.model):
+            raise ConfigError("llm.model must be a plain model id")
+        if self.model != OFFICIAL_PRO_MODEL:
+            if not self.user_model_override or not (self.override_reason or "").strip():
+                raise ConfigError(f"llm.model must be {OFFICIAL_PRO_MODEL} (official GPT-6 Pro mapping, plan §2.1); "
+                                  "to use another model set llm.user_model_override: true and llm.override_reason")
+        elif self.user_model_override:
+            raise ConfigError("llm.user_model_override is only for models other than the official mapping")
         reasoning = self.reasoning or {}
         if reasoning.get("mode") != "pro":
             raise ConfigError("llm.reasoning.mode must be 'pro'")

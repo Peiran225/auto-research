@@ -61,7 +61,7 @@ def build_binding(llm: LLMConfig, run_id: str, mapping_check: dict[str, Any]) ->
     return ModelBinding(
         id=f"binding_{run_id}",
         origin=ExecutionOrigin.live,
-        source="config.llm (plan §2.1 mapping)",
+        source="config.llm (plan §2.1 mapping)" if llm.is_official_mapping else "config.llm (user model override)",
         requested_product=llm.requested_product or "",
         provider="openai",
         api="responses",
@@ -73,5 +73,7 @@ def build_binding(llm: LLMConfig, run_id: str, mapping_check: dict[str, Any]) ->
         sdk_version=sdk_version(),
         mapping_verified_on=llm.mapping_verified_on or "",
         mapping_sources=llm.mapping_sources or [S11, S12, S13],
-        mapping_check={**mapping_check, "bound_on": dt.date.today().isoformat()},
+        mapping_check={**mapping_check, "bound_on": dt.date.today().isoformat(),
+                       "model_choice": ("official GPT-6 Pro mapping (plan §2.1)" if llm.is_official_mapping else
+                                        f"USER OVERRIDE, not the documented GPT-6 Pro mapping: {llm.override_reason}")},
     )

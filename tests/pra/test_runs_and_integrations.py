@@ -421,3 +421,21 @@ def test_t11_completed_pilot_is_recovered_not_recomputed(runs_root, monkeypatch)
     assert act.status.value == "succeeded" and act.attempt == 2
     assert calls == [1] and ctrl2.budget.used("pilots") == used == 1
     assert ctrl2.store.events("pilot_result_recovered")
+
+
+def test_t19_model_override_must_be_explicit_and_is_recorded():
+    with pytest.raises(Exception):
+        _live_llm(model="gpt-6.2-astra")                                  # no silent switch
+    with pytest.raises(Exception):
+        _live_llm(model="gpt-6.2-astra", user_model_override=True)       # reason required
+    with pytest.raises(Exception):
+        _live_llm(model="gpt-6.2-astra", user_model_override=True, override_reason="x", reasoning={"mode": "standard"})
+    with pytest.raises(Exception):
+        _live_llm(user_model_override=True, override_reason="not needed for the official id")
+    cfg = _live_llm(model="gpt-6.2-astra", user_model_override=True, override_reason="user chose GPT-6.2 Astra")
+    b = build_binding(cfg, "r2", {})
+    assert b.resolved_model == "gpt-6.2-astra" and b.reasoning_mode == "pro"
+    assert b.mapping_check["model_choice"].startswith("USER OVERRIDE") and "override" in b.source
+    official = build_binding(_live_llm(), "r3", {})
+    assert official.mapping_check["model_choice"].startswith("official")
+    assert b.binding_hash != official.binding_hash

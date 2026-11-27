@@ -68,7 +68,9 @@ def doctor(config: Path = typer.Option(..., help="run config YAML"),
         report["llm"] = {"provider": "openai", "api": "responses", "model": cfg.llm.model,
                          "reasoning": cfg.llm.reasoning, "effort_sent": False, "credential_env": cfg.llm.credential_env,
                          "credential_present": key_present, "sdk": sdk_mapping_evidence(),
-                         "pricing": cfg.llm.pricing}
+                         "pricing": cfg.llm.pricing,
+                         "model_choice": "official GPT-6 Pro mapping" if cfg.llm.is_official_mapping
+                         else f"user override: {cfg.llm.override_reason}"}
         if not key_present:
             missing.append(f"export {cfg.llm.credential_env}=<key> (read from the environment only)")
         if cfg.llm.pricing.get("input_per_mtok") is None or cfg.llm.pricing.get("output_per_mtok") is None:

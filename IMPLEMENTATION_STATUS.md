@@ -107,6 +107,7 @@ Completion is reported in the plan's three separate senses: **Engineering**, **I
 6. **Interrupted attempts** are charged at their reserved amount (conservative, never free). A pilot that finished before the crash is recovered from its marker and not recomputed.
 7. **Protocol versions** are unique per `protocol_id`, so a revised candidate gets `@2`.
 8. **The gates require live nearest-neighbour reading,** so an offline run can never recommend formal research. This is deliberate: fixture literature cannot justify research investment.
+10. **User-approved model override (2026-11-27).** The user chose `gpt-6.2-astra` for the front end. `llm.model` must still be `gpt-6-astra` unless `llm.user_model_override: true` and a non-empty `llm.override_reason` are set. The override keeps one model per run, Pro mode, no effort and no fallback. The `ModelBinding` records `mapping_check.model_choice = "USER OVERRIDE, not the documented GPT-6 Pro mapping: …"` and `source = "config.llm (user model override)"`. This deviates from plan §2.1, which keeps `gpt-6-astra` as the documented mapping; whether `gpt-6.2-astra` accepts `reasoning.mode=pro` is decided by the API at call time (an unsupported mode fails as `PRO_MODE_UNAVAILABLE` / `BINDING_MISMATCH`).
 9. **v3 paper phase.** In native mode it runs in Docker (`container.paper_enabled=true`), because upstream refuses native agents for the paper audit.
 
 ## 4. Not verified / not implemented (precise)

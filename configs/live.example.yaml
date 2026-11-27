@@ -15,6 +15,10 @@ llm:
     - https://help.openai.com/en/articles/20001354-gpt-6-and-other-models-in-chatgpt
     - https://developers.openai.com/api/docs/models/gpt-6-astra
     - https://developers.openai.com/api/docs/guides/reasoning#reasoning-mode
+  # To use another model id (e.g. gpt-6.2-astra) set both lines below; the run binding records
+  # it as a user override, not as the documented GPT-6 Pro mapping. Pro mode is still required.
+  user_model_override: false
+  override_reason: null
   allow_task_overrides: false
   fallback_models: []
   freeze_binding_per_run: true
