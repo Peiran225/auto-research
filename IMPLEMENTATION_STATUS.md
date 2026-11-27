@@ -108,6 +108,11 @@ Completion is reported in the plan's three separate senses: **Engineering**, **I
 7. **Protocol versions** are unique per `protocol_id`, so a revised candidate gets `@2`.
 8. **The gates require live nearest-neighbour reading,** so an offline run can never recommend formal research. This is deliberate: fixture literature cannot justify research investment.
 10. **User-approved model override (2026-11-27).** The user chose `gpt-6.2-astra` for the front end. `llm.model` must still be `gpt-6-astra` unless `llm.user_model_override: true` and a non-empty `llm.override_reason` are set. The override keeps one model per run, Pro mode, no effort and no fallback. The `ModelBinding` records `mapping_check.model_choice = "USER OVERRIDE, not the documented GPT-6 Pro mapping: …"` and `source = "config.llm (user model override)"`. This deviates from plan §2.1, which keeps `gpt-6-astra` as the documented mapping; whether `gpt-6.2-astra` accepts `reasoning.mode=pro` is decided by the API at call time (an unsupported mode fails as `PRO_MODE_UNAVAILABLE` / `BINDING_MISMATCH`).
+11. **First live runs (2026-11-27, user's server, `gpt-6.2-astra` + Pro).** The first real call returned after about 2 minutes (about 18k input and 11k output tokens). Live use exposed and fixed four issues:
+    - `task:<id>` input references were not resolvable;
+    - there was no progress output during long calls: calls now run in Responses background mode with polling, a heartbeat every 30 s and cancellation at `request_timeout_seconds`;
+    - a failed run could not be reopened: added `pra resume --retry-failed`;
+    - frozen budgets could not be raised: added `pra resume --raise-limit KEY=VALUE`, which only increases limits, records each change and reopens runs stopped for budget or rounds.
 9. **v3 paper phase.** In native mode it runs in Docker (`container.paper_enabled=true`), because upstream refuses native agents for the paper audit.
 
 ## 4. Not verified / not implemented (precise)

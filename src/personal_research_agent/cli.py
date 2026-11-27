@@ -121,13 +121,20 @@ def run(task: Path = typer.Option(...), profile: Path = typer.Option(...), confi
 
 @app.command()
 def resume(run_id: str = typer.Option(...), until: Optional[str] = typer.Option(None),
-           retry_failed: bool = typer.Option(False, help="reopen a failed/blocked run; completed steps are reused, failed ones retried within limits")):
+           retry_failed: bool = typer.Option(False, help="reopen a failed/blocked run; completed steps are reused, failed ones retried within limits"),
+           raise_limit: list[str] = typer.Option([], "--raise-limit", help="raise a frozen limit, e.g. --raise-limit api_usd=35 (only increases; recorded)")):
     """Idempotent resume: finished runs are not re-run; completed actions are not repeated or re-charged."""
     from .controller import Controller
 
     try:
+        if raise_limit:
+            raises = {}
+            for item in raise_limit:
+                key, _, value = item.partition("=")
+                raises[key.strip()] = float(value)
+            typer.echo(json.dumps({"limits_raised": Controller.raise_limits(run_id, raises, _runs_root())}))
         ctrl = Controller.open(run_id, _runs_root())
-    except ConfigError as exc:
+    except (ConfigError, ValueError) as exc:
         typer.echo(f"CONFIG ERROR: {exc}")
         raise typer.Exit(EXIT_CONFIG)
     from .models import OperationStatus

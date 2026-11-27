@@ -515,3 +515,19 @@ def test_resume_retry_failed_reuses_completed_steps(runs_root):
     code, out = run_cli("resume", "--run-id", "t_retry", "--retry-failed")
     assert code == 0 and _json(out)["operation_status"] == "completed"
     assert _ledger(runs_root, "t_retry")[: len(before)] == before
+
+
+def test_raise_limit_only_increases_is_recorded_and_reopens_budget_stops(runs_root, tmp_path):
+    cfg = tmp_path / "tight.yaml"
+    cfg.write_text((ROOT / "configs/offline.yaml").read_text().replace("max_pilots: 3", "max_pilots: 1"))
+    code, out = run_cli("run", "--task", TASK_MDP, "--profile", PROFILE, "--config", str(cfg), "--run-id", "t_raise")
+    assert code == 0
+    code, out = run_cli("resume", "--run-id", "t_raise", "--raise-limit", "max_pilots=0")
+    assert code == 2 and "can only be raised" in out
+    code, out = run_cli("resume", "--run-id", "t_raise", "--raise-limit", "max_pilots=3")
+    assert code == 0, out
+    from personal_research_agent.controller import Controller
+    ctrl = Controller.open("t_raise", runs_root)
+    assert ctrl.config.limits.max_pilots == 3
+    assert ctrl.drun.config_snapshot["limit_amendments"][0]["changes"]["max_pilots"] == {"from": 1, "to": 3.0}
+    assert ctrl.store.events("limits_raised")

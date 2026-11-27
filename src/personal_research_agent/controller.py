@@ -131,6 +131,41 @@ class Controller:
                 store.put(binding, event="model_binding_frozen", event_payload={"binding_hash": binding.binding_hash})
         return cls(run_dir, store, config, task, profile, drun, binding)
 
+    @staticmethod
+    def raise_limits(run_id: str, raises: dict[str, float], runs_root: Path = RUNS_ROOT) -> dict:
+        """User-authorised budget increase for an existing run. Limits can only go up; every
+        amendment is recorded in the run snapshot and the event log. Nothing else in the frozen
+        configuration changes."""
+        from .config import Limits
+
+        store = Store(runs_root / run_id / "state.sqlite", run_id)
+        drun = store.require(f"run_{run_id}", DecisionRun)
+        limits = dict(drun.config_snapshot["config"]["limits"])
+        changes = {}
+        for key, value in raises.items():
+            if key not in limits:
+                raise ConfigError(f"unknown limit {key}; valid: {sorted(limits)}")
+            if float(value) < float(limits[key]):
+                raise ConfigError(f"limit {key} can only be raised ({limits[key]} -> {value} refused)")
+            changes[key] = {"from": limits[key], "to": value}
+            limits[key] = value
+        Limits.model_validate(limits)
+        drun.config_snapshot["config"]["limits"] = limits
+        drun.config_snapshot.setdefault("limit_amendments", []).append({"at": utcnow(), "changes": changes})
+        reopened = False
+        if (drun.operation_status == OperationStatus.completed
+                and drun.stop_reason in (StopReason.budget_exhausted, StopReason.max_rounds_reached)):
+            # the loop stopped only for lack of budget/rounds: continue it; reports are rewritten at the end
+            drun.operation_status, drun.phase = OperationStatus.paused, Phase.acquire_evidence
+            drun.planning_outcome, drun.stop_reason = PlanningOutcome.not_run, None
+            drun.recommended_candidate_revision_id = None
+            drun.notes.append(f"reopened at acquire_evidence after a user-authorised limit increase: {changes}")
+            reopened = True
+        store.update(drun, event="limits_raised", event_payload={"changes": changes, "reopened": reopened})
+        store.checkpoint()
+        store.close()
+        return changes
+
     @classmethod
     def open(cls, run_id: str, runs_root: Path = RUNS_ROOT, check_drift: bool = True) -> "Controller":
         run_dir = runs_root / run_id
