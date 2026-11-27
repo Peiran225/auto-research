@@ -69,6 +69,36 @@ def prompt_hashes(prompts_dir: Path = PROMPTS_DIR) -> dict[str, str]:
     return {p.stem: sha256_text(p.read_text(encoding="utf-8")) for p in sorted(prompts_dir.glob("*.txt"))}
 
 
+_PAGE_RANGE = re.compile(r"^(?:pp?\.?|pages?)\s*(\d+)\s*(?:[-–—~]|to)\s*(?:p\.?\s*)?(\d+)$", re.I)
+_PAGE_ONE = re.compile(r"^(?:p\.?|page)\s*(\d+)$", re.I)
+
+
+def split_locator(locator: str) -> Optional[list[str]]:
+    """Normalise a cited location into unit keys: "p.3" -> ["p.3"], "pp.3–5" -> ["p.3","p.4","p.5"],
+    "p.2; §1" -> ["p.2","§1"]. Free text ("intro and method") returns None: it is not a locator."""
+    keys: list[str] = []
+    for part in re.split(r"[;,，；]\s*", locator.strip()):
+        part = part.strip()
+        if not part:
+            continue
+        m = _PAGE_RANGE.match(part)
+        if m:
+            a, b = int(m.group(1)), int(m.group(2))
+            if b < a or b - a > 50:
+                return None
+            keys += [f"p.{i}" for i in range(a, b + 1)]
+            continue
+        m = _PAGE_ONE.match(part)
+        if m:
+            keys.append(f"p.{int(m.group(1))}")
+            continue
+        if re.fullmatch(r"§\d+|abstract", part):
+            keys.append(part)
+            continue
+        return None
+    return keys or None
+
+
 def persona_violations(text: str) -> list[str]:
     return [p for p in PERSONA_PATTERNS if re.search(p, text, re.I)]
 
@@ -84,6 +114,8 @@ class QueryInput:
     protocol_version: Optional[int] = None
     allowed_tools: list[str] = field(default_factory=list)
     context_scope: str = "isolated"
+    # paper id -> unit keys actually sent in this query; citations of a paper must stay inside them
+    sent_units: dict[str, list[str]] = field(default_factory=dict)
 
 
 class RefResolver:
@@ -134,12 +166,17 @@ class RefResolver:
 
         if not locator:
             return False, "missing locator"
-        if locator == "abstract":
-            return bool(paper.abstract), "abstract not available"
+        if locator == "abstract" and paper.abstract:
+            return True, ""
+        keys = split_locator(locator)
+        if keys is None:
+            return False, (f"locator {locator!r} is not a unit key: use one or more of the unit keys sent "
+                           f"(e.g. 'p.3', 'pp.3-4', '§2'), one location per source_ref")
         doc = load_document_for(self.run_dir, paper)
         if doc is None:
             return False, f"no retrieved document for {paper.id}; only metadata/abstract available"
-        return doc.has_locator(locator), f"locator {locator} not in retrieved units of {paper.id}"
+        missing = [k for k in keys if not doc.has_locator(k)]
+        return not missing, f"locator {locator} ({missing}) not in retrieved units of {paper.id}"
 
 
 class QueryRunner:
@@ -149,6 +186,7 @@ class QueryRunner:
         self.max_output_tokens = max_output_tokens
         self.common = load_template("common_evidence_query")
         self.resolver = RefResolver(store, run_dir)
+        self._sent_units: dict[str, list[str]] = {}
 
     # ------------------------------------------------------------------ public
     def run(self, qi: QueryInput, action_id: Optional[str]) -> tuple[QueryResult, BaseModel]:
@@ -212,6 +250,10 @@ class QueryRunner:
             "ALLOWED TOOLS: " + json.dumps(qi.allowed_tools),
             "INPUT REFERENCES you may cite (anything else is invalid): " + json.dumps(qi.input_refs, ensure_ascii=False),
             "BUDGET: " + json.dumps(spec.call_budget),
+            "REFERENCE FORMAT: each source_ref is {source_id, locator, read_scope}. locator is one unit key "
+            "exactly as given in the material (e.g. 'p.3', a page range 'pp.3-4', or '§2'); never a description. "
+            "Use several source_refs for several places. read_scope is one of "
+            + json.dumps(sorted(READ_SCOPE_RANK)) + " and states how much of that source you were actually given.",
             "Return JSON with 'answers' (one or more per question id) and 'payload' matching the schema.",
         ])
         return LLMRequest(task_type=qi.task_type, developer_text=developer, user_payload={"material": qi.material},
@@ -239,10 +281,17 @@ class QueryRunner:
         if unknown_ids:
             errors.append(f"answers to unknown question ids {sorted(unknown_ids)}")
         allowed = set(qi.input_refs)
+        self._sent_units = qi.sent_units
         for a in env.answers:
             errors += self._check_answer(a, allowed, answered)
         errors += self._check_payload_refs(env.payload, allowed)
         return errors
+
+    def resolver_units(self, paper: PaperRecord) -> Optional[set[str]]:
+        from ..literature.service import load_document_for
+
+        doc = load_document_for(self.run_dir, paper)
+        return set(doc.units) if doc else None
 
     def _allowed(self, ref: str, allowed: set[str]) -> bool:
         if ref in allowed:
@@ -269,11 +318,23 @@ class QueryRunner:
                 ok, why = self.resolver.locator_ok(rec, loc)
                 if not ok:
                     errs.append(f"{a.question_id}: {why}")
+                sent = self._sent_units.get(rec.id)
+                if ok and sent is not None:
+                    keys = split_locator(loc or "") or []
+                    outside = [k for k in keys if k not in sent]
+                    if outside:
+                        errs.append(f"{a.question_id}: cites {outside} of {rec.id}, which were not sent in this query")
                 scope = ref.get("read_scope")
+                max_rank = STATUS_MAX_SCOPE[rec.text_status]
+                if sent is not None and rec.document_path and max_rank >= 2:
+                    doc_units = (self.resolver_units(rec) or set())
+                    if doc_units and set(sent) < doc_units:
+                        max_rank = min(max_rank, READ_SCOPE_RANK["partial_text"])   # only part was sent
                 if scope not in READ_SCOPE_RANK:
                     errs.append(f"{a.question_id}: read_scope must be one of {sorted(READ_SCOPE_RANK)}")
-                elif READ_SCOPE_RANK[scope] > STATUS_MAX_SCOPE[rec.text_status]:
-                    errs.append(f"{a.question_id}: claims read_scope={scope} but {rec.id} is {rec.text_status.value}")
+                elif READ_SCOPE_RANK[scope] > max_rank:
+                    errs.append(f"{a.question_id}: claims read_scope={scope} but only "
+                                f"{[k for k, v in READ_SCOPE_RANK.items() if v == max_rank][0]} of {rec.id} was available")
             elif not self.resolver.exists(sid):
                 errs.append(f"{a.question_id}: unresolvable source {sid}")
             if a.basis_type == FactBasis.tool_observation:

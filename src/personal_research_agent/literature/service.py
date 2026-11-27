@@ -115,7 +115,7 @@ class LiteratureService:
                                             "note": doc.note, "units": doc.units}), encoding="utf-8")
         paper = paper.model_copy(update={
             "text_status": doc.status, "document_path": str(doc_path.relative_to(self.run_dir)),
-            "document_sha256": doc.sha256, "read_scope": sorted(doc.units),
+            "document_sha256": doc.sha256, "read_scope": [],      # retrieved, not yet read
             "arxiv_version": paper.arxiv_version or (doc.version if paper.arxiv_id else None),
         })
         self.store.update(paper, event="paper_read", event_payload={

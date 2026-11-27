@@ -166,6 +166,29 @@ class Controller:
         store.close()
         return changes
 
+    @staticmethod
+    def reopen_at(run_id: str, phase: str, runs_root: Path = RUNS_ROOT) -> dict:
+        """User-requested restart of a finished run from an earlier phase. Completed queries and
+        actions are reused through their fingerprints; outcomes are recomputed; the event is logged."""
+        store = Store(runs_root / run_id / "state.sqlite", run_id)
+        drun = store.require(f"run_{run_id}", DecisionRun)
+        target = Phase(phase)
+        allowed = PHASE_ORDER[PHASE_ORDER.index(Phase.clarify): PHASE_ORDER.index(Phase.acquire_evidence) + 1]
+        if target not in allowed:
+            raise ConfigError(f"--reopen-at must be one of {[p.value for p in allowed]}")
+        if PHASE_ORDER.index(target) > PHASE_ORDER.index(drun.phase):
+            raise ConfigError(f"cannot reopen at {phase}: the run is only at {drun.phase.value}")
+        before = {"phase": drun.phase.value, "status": drun.operation_status.value,
+                  "planning": drun.planning_outcome.value, "stop_reason": drun.stop_reason.value if drun.stop_reason else None}
+        drun.phase, drun.operation_status, drun.error = target, OperationStatus.paused, None
+        drun.planning_outcome, drun.research_outcome = PlanningOutcome.not_run, ResearchOutcome.not_run
+        drun.stop_reason, drun.recommended_candidate_revision_id = None, None
+        drun.notes.append(f"reopened at {phase} by the user (previous: {before})")
+        store.update(drun, event="run_reopened", event_payload={"at": phase, "previous": before})
+        store.checkpoint()
+        store.close()
+        return before
+
     @classmethod
     def open(cls, run_id: str, runs_root: Path = RUNS_ROOT, check_drift: bool = True) -> "Controller":
         run_dir = runs_root / run_id
@@ -364,12 +387,15 @@ class Controller:
         existing_id = self.store.action_for_fingerprint(fp)
         if existing_id:
             existing = self.store.require(existing_id, ResearchAction)
-            if existing.status in (ActionStatus.succeeded, ActionStatus.no_change, ActionStatus.skipped_budget):
-                return existing       # identical input already done (or unaffordable): not repeated, not charged
+            if existing.status in (ActionStatus.succeeded, ActionStatus.no_change):
+                return existing       # identical input already done: not repeated, not charged
+            if existing.status == ActionStatus.skipped_budget and not self._raised_since(existing.id):
+                return existing       # still unaffordable under the same limits
             if existing.status == ActionStatus.failed and existing.attempt > self.config.limits.max_retries_per_action:
                 return existing       # retry cap reached for this logical action
             action = existing
-            action.attempt = existing.attempt + 1 if existing.status == ActionStatus.failed else existing.attempt
+            action.attempt = existing.attempt + 1 if existing.status in (ActionStatus.failed, ActionStatus.skipped_budget) \
+                else existing.attempt
         else:
             action = ResearchAction(
                 id=new_id("act"), origin=self.origin, source="controller", action_type=action_type, purpose=purpose,
@@ -562,12 +588,12 @@ class Controller:
                            and r not in json.dumps([u.model_dump() for u in p.unknowns], ensure_ascii=False)]
             if missing_req:
                 ps.open_items.append(f"clarification requirements not addressed: {missing_req}")
-            self.store.put(ps, event="problem_spec")
+            self.store.put_if_absent(ps, event="problem_spec")
             ids.append(ps.id)
             for c in p.concepts:
                 cap, basis = prof.capability_for([c.canonical_name, *c.aliases], self.profile)
                 cid = f"concept_{stable_hash(c.canonical_name)[:10]}"
-                self.store.put(Concept(id=cid, origin=self.origin, source=f"query:{result.id}",
+                self.store.put_if_absent(Concept(id=cid, origin=self.origin, source=f"query:{result.id}",
                                        canonical_name=c.canonical_name, aliases=c.aliases, role=c.role,
                                        existing_capability=cap, existing_capability_basis=basis), event="concept")
                 ids.append(cid)
@@ -581,6 +607,10 @@ class Controller:
         self._search_plan = getattr(payload, "search_queries", [])
         self.store.event("search_plan", {"queries": self._search_plan})
 
+    def _latest_problem(self) -> ProblemSpec:
+        specs = [p for p in self.store.list(ProblemSpec) if p.task_id == self.task.task_id]
+        return specs[-1]
+
     def _search_queries(self) -> list[dict[str, str]]:
         plan = [e["payload"]["queries"] for e in self.store.events("search_plan")]
         return plan[-1] if plan else []
@@ -592,9 +622,12 @@ class Controller:
             self.store.event("paper_read_skipped", {"paper": paper.id, "reason": str(exc)[:200]})
             return None
         units = doc.units
+        sent = self._select_units(units)
         material = {"paper_id": paper.id, "canonical_id": paper.canonical_id, "version": doc.version,
-                    "text_status": doc.status.value, "read_scope": sorted(units), "questions": questions,
-                    "units": {k: v[:6000] for k, v in units.items()},
+                    "text_status": doc.status.value, "units_retrieved": len(units), "units_sent": list(sent),
+                    "note": ("only the listed units were sent; say partial_text and do not describe unsent parts"
+                             if len(sent) < len(units) else "all retrieved units were sent"),
+                    "questions": questions, "units": sent,
                     "candidates": [{"key": r.candidate_id, "revision": r.id, "claims": r.claims}
                                    for r in self.current_revisions()]}
 
@@ -602,16 +635,20 @@ class Controller:
             ids = []
             if p.paper_id != paper.id:
                 raise QueryValidationError([f"read_paper payload for {p.paper_id}, expected {paper.id}"])
+            from .agents.query import split_locator
+
             for e in p.evidence:
-                if not doc.has_locator(e.locator):
+                keys = split_locator(e.locator)
+                if not keys or any(k not in sent for k in keys):
                     self.store.event("evidence_rejected", {"paper": paper.id, "locator": e.locator,
-                                                           "reason": "locator not in retrieved text"})
+                                                           "reason": "locator is not a unit sent in this query"})
                     continue
+                unit_text = "\n".join(units[k] for k in keys)
                 namespace = "fixture" if paper.origin == ExecutionOrigin.fixture else "literature"
                 ev = Evidence(id=new_id("ev"), origin=paper.origin, source=f"query:{result.id}",
                               kind=EvidenceKind.literature_report, namespace=namespace, source_id=paper.id,
                               source_version=doc.version, locator=e.locator,
-                              content_hash=sha256_text(units[e.locator] + "\n" + e.observation),
+                              content_hash=sha256_text(unit_text + "\n" + e.observation),
                               observation=e.observation, same_source_group=f"{paper.canonical_id}#{e.locator}",
                               verification_status=VerificationStatus.unverified)
                 eid, created = self.store.put(ev, event="evidence_added")
@@ -626,9 +663,36 @@ class Controller:
                                        event="evidence_link")
             return ids
 
-        action, _ = self.query(QueryInput("read_paper", material, input_refs=[paper.id], fixture_key=fixture_key,
-                                          allowed_tools=["retrieved_document"]), commit=commit)
+        action, payload = self.query(QueryInput("read_paper", material, input_refs=[paper.id], fixture_key=fixture_key,
+                                                allowed_tools=["retrieved_document"], sent_units={paper.id: list(sent)}),
+                                     commit=commit)
+        if payload is not None:
+            fresh = self.store.require(paper.id, PaperRecord)
+            fresh.read_scope = sorted(set(fresh.read_scope) | set(sent))     # what was actually read
+            self.store.update(fresh, event="paper_read_scope", event_payload={"units": len(fresh.read_scope),
+                                                                               "of": len(units)})
         return action
+
+    def _select_units(self, units: dict[str, str]) -> dict[str, str]:
+        """Bounded reading: the first two units (abstract/introduction), then units that mention the
+        idea's terms, then the rest in order, until literature.max_chars_per_read is reached."""
+        import re as _re
+
+        cap = self.config.literature.max_chars_per_read
+        order = sorted(units, key=lambda k: (k[0], int(_re.sub(r"\D", "", k) or 0)))
+        if sum(len(v) for v in units.values()) <= cap:
+            return {k: units[k] for k in order}
+        terms = {w for c in self.store.list(Concept) for w in _re.findall(r"[a-z]{4,}", (c.canonical_name + " " + " ".join(c.aliases)).lower())}
+        terms |= {w for w in _re.findall(r"[a-z]{4,}", self.task.idea.lower())}
+        hits = sorted(order[2:], key=lambda k: -sum(units[k].lower().count(t) for t in terms))
+        picked, total = {}, 0
+        for k in order[:2] + hits:
+            text = units[k][:8000]
+            if total + len(text) > cap and picked:
+                continue
+            picked[k] = text
+            total += len(text)
+        return {k: picked[k] for k in order if k in picked}
 
     def map_field(self) -> None:
         cap = self.config.limits.max_search_queries
@@ -647,7 +711,10 @@ class Controller:
 
         def commit(result: QueryResult, p) -> list[str]:
             base = self.store.require(f"problem_{self.task.task_id}_v1", ProblemSpec)
-            ps = base.model_copy(update={"id": f"problem_{self.task.task_id}_v2", "source": f"query:{result.id}",
+            n = 2
+            while self.store.exists(f"problem_{self.task.task_id}_v{n}"):
+                n += 1                       # a re-entered field map is a new version, never an overwrite
+            ps = base.model_copy(update={"id": f"problem_{self.task.task_id}_v{n}", "source": f"query:{result.id}",
                                          "field_problems": [f.model_dump() for f in p.field_problems],
                                          "created_at": utcnow(), "query_result_id": result.id})
             self.store.put(ps, event="problem_spec_field_map")
@@ -657,14 +724,16 @@ class Controller:
                    commit=commit)
 
     def retrieve_and_read(self) -> None:
-        concepts = self.store.list(Concept)
+        latest: dict[str, Concept] = {}
+        for c in self.store.list(Concept):
+            latest[c.canonical_name] = c
+        concepts = list(latest.values())
         material = {
             "profile": {"expertise": [e.model_dump() for e in self.profile.expertise],
                         "research_interests": self.profile.research_interests,
                         "taste_rules": prof.taste_material(self.profile, self.drun.strategy)},
             "concepts": [c.model_dump(mode="json") for c in concepts],
-            "field_problems": self.store.require(f"problem_{self.task.task_id}_v2", ProblemSpec).field_problems
-            if self.store.exists(f"problem_{self.task.task_id}_v2") else [],
+            "field_problems": self._latest_problem().field_problems,
             "evidence": [{"id": e.id, "observation": e.observation} for e in self.store.list(Evidence)],
         }
 
@@ -676,7 +745,7 @@ class Controller:
                         if c.canonical_name == a.subject_key:
                             c2 = c.model_copy(update={"id": c.id + "_f", "field_importance": a.judgment,
                                                       "field_importance_basis": a.rationale, "created_at": utcnow()})
-                            self.store.put(c2, event="concept_field_importance")
+                            self.store.put_if_absent(c2, event="concept_field_importance")
                             ids.append(c2.id)
             for t in p.learning_tasks:
                 uid = f"unk_learn_{stable_hash(t)[:8]}"
@@ -724,7 +793,7 @@ class Controller:
                                         validation_protocol={**c.validation_protocol, "cheapest_check": c.cheapest_check},
                                         abandon_conditions=c.abandon_conditions,
                                         research_branch=ResearchBranch(branch))
-                self.store.put(rev, event="candidate_proposed")
+                self.store.put_if_absent(rev, event="candidate_proposed")
                 ids.append(rev.id)
             ids += self.add_unknowns(p.unknowns, f"query:{result.id}")
             if p.no_alternative_reason:
@@ -844,10 +913,16 @@ class Controller:
         while True:
             snap = (self.store.list(RankingSnapshot) or [None])[-1]
             active = self.current_revisions()
+            if not self.store.list(CandidateRevision):
+                self.drun.stop_reason = (StopReason.budget_exhausted if self._exhausted_dims()
+                                         else StopReason.no_available_action)
+                self.drun.notes.append("no candidate was formed"
+                                       + (f" (budget exhausted: {self._exhausted_dims()})" if self._exhausted_dims() else ""))
+                return Phase.select
             stop = rules.stop_check(self.drun.round, self.drun.no_change_rounds, self.config.limits,
                                     int(self.budget.used("actions")), len(active),
                                     len(snap.unresolved_candidates) if snap else 0, self.budget.wall_remaining(),
-                                    [d for d in ("llm_calls", "actions") if self.budget.remaining(d) < 1])
+                                    self._exhausted_dims())
             if stop.stop:
                 self.drun.stop_reason = stop.reason
                 self.drun.notes.append(f"loop stopped: {stop.detail}")
@@ -881,6 +956,25 @@ class Controller:
             self._save_run(event="round_finished", payload={"round": self.drun.round, "new_information": new_info,
                                                             "rejected": rejected})
             self._status_line()
+
+    def _raised_since(self, action_id: str) -> bool:
+        """True when the user raised a limit after this action was refused for budget."""
+        events = self.store.events()
+        skipped = max((e["seq"] for e in events if e["type"] == "action_finished"
+                       and e["payload"].get("id") == action_id), default=0)
+        return any(e["type"] == "limits_raised" and e["seq"] > skipped for e in events)
+
+    def _exhausted_dims(self) -> list[str]:
+        """Budget dimensions with no room for another model call or action."""
+        out = [d for d in ("llm_calls", "actions") if self.budget.limits[d] > 0 and self.budget.remaining(d) < 1]
+        out += [d for d in ("input_tokens", "output_tokens", "usd") if self.budget.limits[d] > 0 and self.budget.remaining(d) <= 0]
+        # a refused reservation since the last limit increase also means the budget is the binding constraint
+        events = self.store.events()
+        last_raise = max((e["seq"] for e in events if e["type"] == "limits_raised"), default=0)
+        refused = {e["payload"].get("dimension") for e in events
+                   if e["type"] == "budget_reservation_refused" and e["seq"] > last_raise
+                   and e["payload"].get("dimension") not in ("pilots", "search_queries", "full_text_reads")}
+        return sorted(set(out) | {d for d in refused if d})
 
     def _gates_any_pass(self, snap: RankingSnapshot) -> bool:
         return any(g.passed for g in self.gate_reports(snap))
@@ -995,7 +1089,7 @@ class Controller:
                 done = [a for a in self.store.list(ResearchAction) if a.rationale.get("choice_fingerprint") == fp]
                 if any(a.status in (ActionStatus.succeeded, ActionStatus.no_change) for a in done):
                     why_not = "identical input already executed"
-                elif any(a.status == ActionStatus.skipped_budget for a in done):
+                elif any(a.status == ActionStatus.skipped_budget and not self._raised_since(a.id) for a in done):
                     why_not = "identical input was already refused for budget"
                 elif any(a.status == ActionStatus.failed and a.attempt > self.config.limits.max_retries_per_action for a in done):
                     why_not = "retry limit reached for identical input"
@@ -1250,7 +1344,11 @@ class Controller:
         self.store.event("gate_reports", {"reports": [g.__dict__ for g in gates]})
         passed = [g for g in gates if g.passed]
         active = self.current_revisions()
-        if not active and not snap.unresolved_candidates:
+        if not self.store.list(CandidateRevision):
+            self.drun.planning_outcome = PlanningOutcome.inconclusive     # nothing was formed, nothing rejected
+            self.drun.stop_reason = self.drun.stop_reason or (StopReason.budget_exhausted if self._exhausted_dims()
+                                                              else StopReason.no_available_action)
+        elif not active and not snap.unresolved_candidates:
             self.drun.planning_outcome = PlanningOutcome.no_viable_candidate
             self.drun.stop_reason = self.drun.stop_reason or StopReason.all_candidates_rejected
         elif passed:

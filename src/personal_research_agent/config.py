@@ -103,6 +103,7 @@ class LiteratureConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
     provider: Literal["fixture", "arxiv", "openalex"]
     openalex_mailto_env: Optional[str] = None
+    max_chars_per_read: int = 40000      # text sent to the model per read_paper query (whole paper if shorter)
     request_timeout_seconds: float = 30
 
 

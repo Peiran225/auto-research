@@ -111,6 +111,7 @@ class StopDecision:
 def stop_check(round_: int, no_change: int, limits, actions_done: int, active_count: int,
                unresolved_count: int, wall_remaining: float, budget_exhausted_dims: list[str]) -> StopDecision:
     if active_count == 0 and unresolved_count == 0:
+        # callers only reach this with at least one formed candidate (zero candidates is not a rejection)
         return StopDecision(True, StopReason.all_candidates_rejected, "every candidate was rejected on explicit grounds")
     if budget_exhausted_dims:
         return StopDecision(True, StopReason.budget_exhausted, f"exhausted: {budget_exhausted_dims}")

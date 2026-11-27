@@ -158,6 +158,13 @@ class Store:
                 self.event(event, {"id": record.id, "kind": type(record).__name__, **(event_payload or {})})
         return record.id, True
 
+    def put_if_absent(self, record: Record, event: str | None = None, event_payload: dict | None = None) -> tuple[str, bool]:
+        """For records with deterministic ids that a re-entered phase may produce again."""
+        if self.exists(record.id):
+            self.event("record_exists_skipped", {"id": record.id, "kind": type(record).__name__})
+            return record.id, False
+        return self.put(record, event, event_payload)
+
     def update(self, record: Record, event: str | None = None, event_payload: dict | None = None) -> None:
         if type(record).__name__ not in MUTABLE_KINDS:
             raise ImmutableRecordError(f"{type(record).__name__} is append-only; create a new record instead")

@@ -35,6 +35,19 @@ class LLMGateway:
         self.heartbeat_seconds = heartbeat_seconds
         self.log = log or (lambda m: print(m, file=sys.stderr, flush=True))
 
+    def _observed_ratios(self) -> tuple[float, float]:
+        """Reservations must be upper bounds. Pro mode can bill far more tokens than the prompt
+        length suggests (and more output than max_output_tokens), so scale by the largest
+        actual/estimate ratio seen in this run (with a 1.25 safety margin)."""
+        rin, rout = 1.0, 1.0
+        for e in self.store.events("llm_call"):
+            p = e["payload"]
+            if p.get("origin") != "live" or not p.get("input_estimate"):
+                continue
+            rin = max(rin, p.get("input_tokens", 0) / max(1, p["input_estimate"]))
+            rout = max(rout, p.get("output_tokens", 0) / max(1, p.get("max_output_tokens") or 1))
+        return (rin * 1.25 if rin > 1 else 1.0), (rout * 1.25 if rout > 1 else 1.0)
+
     @property
     def origin(self) -> ExecutionOrigin:
         return self.provider.origin
@@ -52,8 +65,10 @@ class LLMGateway:
         cost_type = "fixture" if fixture else "actual"
         while attempt <= self.max_retries:
             attempt += 1
-            request_dims = {"llm_calls": 1, "input_tokens": request.input_token_estimate(),
-                            "output_tokens": request.max_output_tokens}
+            in_ratio, out_ratio = (1.0, 1.0) if fixture else self._observed_ratios()
+            est_in = request.input_token_estimate()
+            request_dims = {"llm_calls": 1, "input_tokens": int(est_in * in_ratio),
+                            "output_tokens": int(request.max_output_tokens * out_ratio)}
             usd_cap = None if fixture else self._usd(request_dims["input_tokens"], request_dims["output_tokens"])
             if usd_cap is not None:
                 request_dims["usd"] = usd_cap
@@ -108,6 +123,7 @@ class LLMGateway:
                 "binding_hash": self.binding.binding_hash if self.binding else None,
                 "returned_model": response.returned_model, "returned_reasoning": response.returned_reasoning,
                 "response_id": response.response_id, "cost_type": cost_type if usd is not None or fixture else "unpriced",
+                "input_estimate": est_in, "max_output_tokens": request.max_output_tokens,
             })
             if self.binding is not None and (response.returned_model or response.returned_reasoning):
                 meta = {"returned_model": response.returned_model, "returned_reasoning": response.returned_reasoning}

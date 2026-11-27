@@ -531,3 +531,55 @@ def test_raise_limit_only_increases_is_recorded_and_reopens_budget_stops(runs_ro
     assert ctrl.config.limits.max_pilots == 3
     assert ctrl.drun.config_snapshot["limit_amendments"][0]["changes"]["max_pilots"] == {"from": 1, "to": 3.0}
     assert ctrl.store.events("limits_raised")
+
+
+def test_locator_formats_and_bounded_reading(runs_root):
+    """Regression (live run): descriptive locators were rejected without guidance, and whole papers
+    were sent to the model."""
+    from personal_research_agent.agents.query import split_locator
+    from personal_research_agent.controller import Controller
+
+    assert split_locator("p.3") == ["p.3"]
+    assert split_locator("pp.3–5") == ["p.3", "p.4", "p.5"]
+    assert split_locator("p.2; §1") == ["p.2", "§1"]
+    assert split_locator("pp.1–2 摘要及引言；pp.3–4 §3.2") is None          # description, not a unit key
+    _run("t_read", TASK_WM, "--until", "clarify")
+    ctrl = Controller.open("t_read", runs_root)
+    units = {f"p.{i}": ("world model hierarchical planning " if i == 17 else "filler text ") * 400 for i in range(1, 31)}
+    picked = ctrl._select_units(units)
+    assert sum(len(v) for v in picked.values()) <= ctrl.config.literature.max_chars_per_read + 8000
+    assert "p.1" in picked and "p.2" in picked and "p.17" in picked and len(picked) < 30
+
+
+def test_budget_stop_before_any_candidate_is_not_all_rejected(runs_root, tmp_path):
+    cfg = tmp_path / "tiny.yaml"
+    cfg.write_text((ROOT / "configs/offline.yaml").read_text().replace("max_input_tokens_total: 200000",
+                                                                       "max_input_tokens_total: 9000"))
+    code, out = run_cli("run", "--task", TASK_MDP, "--profile", PROFILE, "--config", str(cfg), "--run-id", "t_tiny")
+    s = _json(out)
+    assert code == 0 and s["planning_outcome"] == "inconclusive" and s["stop_reason"] == "budget_exhausted", s
+    code, out = run_cli("resume", "--run-id", "t_tiny", "--reopen-at", "map_field",
+                        "--raise-limit", "max_input_tokens_total=200000")
+    s2 = _json(out[out.index("}") + 1:][out[out.index("}") + 1:].index("{"):] if out.count("{") > 2 else out)
+    from personal_research_agent.controller import Controller
+    ctrl = Controller.open("t_tiny", runs_root)
+    assert ctrl.drun.operation_status.value == "completed" and ctrl.store.list(
+        __import__("personal_research_agent.models", fromlist=["CandidateRevision"]).CandidateRevision)
+    assert ctrl.store.events("run_reopened") and ctrl.store.events("limits_raised")
+    assert len([e for e in ctrl.store.events("llm_call") if e["payload"]["task_type"] == "clarify_problem"]) == 1   # reused
+
+
+def test_reservations_scale_with_observed_pro_mode_usage(store, budget):
+    """Regression (live run): Pro mode billed ~15x the estimated input tokens, so fixed estimates were
+    not upper bounds and the token cap was overrun."""
+    from personal_research_agent.agents.gateway import LLMGateway
+
+    binding = build_binding(_live_llm(), "rr", {})
+    store.event("llm_call", {"origin": "live", "input_tokens": 18000, "input_estimate": 1200,
+                             "output_tokens": 11000, "max_output_tokens": 8000})
+    gw = LLMGateway(OpenAIResponsesProvider(binding, client=_FakeClient()), store, budget, binding, max_retries=0)
+    rin, rout = gw._observed_ratios()
+    assert rin == pytest.approx(15 * 1.25) and rout == pytest.approx(11000 / 8000 * 1.25)
+    gw.call(LLMRequest("clarify_problem", "d" * 400, {}, {}, "s", 100), "a1")
+    reserved = [e["payload"]["request"] for e in store.events("budget_reserved") if "llm_calls" in e["payload"]["request"]]
+    assert reserved[-1]["input_tokens"] >= 200 * 15 and reserved[-1]["output_tokens"] >= 100 * 1.3

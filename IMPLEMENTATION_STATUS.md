@@ -113,6 +113,12 @@ Completion is reported in the plan's three separate senses: **Engineering**, **I
     - there was no progress output during long calls: calls now run in Responses background mode with polling, a heartbeat every 30 s and cancellation at `request_timeout_seconds`;
     - a failed run could not be reopened: added `pra resume --retry-failed`;
     - frozen budgets could not be raised: added `pra resume --raise-limit KEY=VALUE`, which only increases limits, records each change and reopens runs stopped for budget or rounds.
+12. **Second live-run findings (same day).** The run spent $8.03 in 7 calls and then stopped. Five issues were found and fixed:
+    - **Whole papers were sent.** Reading is now bounded by `literature.max_chars_per_read` (default 40,000 characters, chosen pages first). `read_scope` records only the pages actually sent, and citing pages that were not sent is rejected.
+    - **Descriptive locators were rejected without guidance.** A reference-format instruction was added, and page ranges such as `pp.3-4` are normalized.
+    - **Reservations were not upper bounds.** Pro mode billed about 15x the estimated input tokens and more output than `max_output_tokens`, so the cap was overrun to −16k. Reservations now scale by the largest actual/estimate ratio observed in the run (×1.25).
+    - **Zero candidates was reported as `no_viable_candidate / all_candidates_rejected`.** It is now `inconclusive` with `budget_exhausted` or `no_available_action`. Budget refusals were also lost in a rolled-back transaction; they are now logged.
+    - **A finished run could not be restarted from an earlier phase.** Added `pra resume --reopen-at PHASE`. Re-entered phases are idempotent: existing records are skipped, and the field map gets a new version. Budget-skipped actions are retried after `--raise-limit`.
 9. **v3 paper phase.** In native mode it runs in Docker (`container.paper_enabled=true`), because upstream refuses native agents for the paper audit.
 
 ## 4. Not verified / not implemented (precise)

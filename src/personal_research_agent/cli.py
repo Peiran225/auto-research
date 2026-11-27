@@ -122,7 +122,8 @@ def run(task: Path = typer.Option(...), profile: Path = typer.Option(...), confi
 @app.command()
 def resume(run_id: str = typer.Option(...), until: Optional[str] = typer.Option(None),
            retry_failed: bool = typer.Option(False, help="reopen a failed/blocked run; completed steps are reused, failed ones retried within limits"),
-           raise_limit: list[str] = typer.Option([], "--raise-limit", help="raise a frozen limit, e.g. --raise-limit api_usd=35 (only increases; recorded)")):
+           raise_limit: list[str] = typer.Option([], "--raise-limit", help="raise a frozen limit, e.g. --raise-limit api_usd=35 (only increases; recorded)"),
+           reopen_at: Optional[str] = typer.Option(None, "--reopen-at", help="restart a finished run from an earlier phase (clarify ... acquire_evidence); finished steps are reused")):
     """Idempotent resume: finished runs are not re-run; completed actions are not repeated or re-charged."""
     from .controller import Controller
 
@@ -133,6 +134,8 @@ def resume(run_id: str = typer.Option(...), until: Optional[str] = typer.Option(
                 key, _, value = item.partition("=")
                 raises[key.strip()] = float(value)
             typer.echo(json.dumps({"limits_raised": Controller.raise_limits(run_id, raises, _runs_root())}))
+        if reopen_at:
+            typer.echo(json.dumps({"reopened_from": Controller.reopen_at(run_id, reopen_at, _runs_root())}))
         ctrl = Controller.open(run_id, _runs_root())
     except (ConfigError, ValueError) as exc:
         typer.echo(f"CONFIG ERROR: {exc}")

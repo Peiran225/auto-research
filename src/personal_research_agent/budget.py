@@ -82,13 +82,21 @@ class Budget:
 
     def reserve(self, request: dict[str, float], action_id: Optional[str], attempt: int = 1,
                 cost_type: str = "measured", backend_run_id: Optional[str] = None) -> Reservation:
+        problem: Optional[BudgetExceeded] = None
         with self.store.tx():
             problem = self.can_reserve(request)
-            if problem:
-                self.store.event("budget_reservation_refused", {"action_id": action_id, "dimension": problem.dimension,
-                                                                "requested": problem.requested,
-                                                                "remaining": problem.remaining})
-                raise problem
+            if problem is None:
+                ids = self._insert(request, action_id, attempt, cost_type, backend_run_id)
+        if problem is not None:
+            # logged in its own transaction so the refusal is not rolled back with the reservation
+            self.store.event("budget_reservation_refused", {"action_id": action_id, "dimension": problem.dimension,
+                                                            "requested": problem.requested, "remaining": problem.remaining})
+            raise problem
+        return Reservation(ids=ids, action_id=action_id, attempt=attempt)
+
+    def _insert(self, request: dict[str, float], action_id: Optional[str], attempt: int, cost_type: str,
+                backend_run_id: Optional[str]) -> dict[str, int]:
+        if True:
             ids: dict[str, int] = {}
             for dim, amount in request.items():
                 if amount <= 0:
@@ -99,7 +107,7 @@ class Budget:
                     (self.store.run_id, action_id, attempt, backend_run_id, dim, float(amount), cost_type, utcnow()))
                 ids[dim] = int(cur.lastrowid)
             self.store.event("budget_reserved", {"action_id": action_id, "attempt": attempt, "request": request})
-        return Reservation(ids=ids, action_id=action_id, attempt=attempt)
+        return ids
 
     def settle(self, reservation: Reservation, actual: dict[str, float], cost_type: str | None = None) -> None:
         """Record actual use (possibly above the reservation, e.g. an overrun the provider reported)
