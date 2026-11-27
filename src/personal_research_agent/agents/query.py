@@ -116,9 +116,14 @@ class RefResolver:
                         return ev
         return None
 
+    # Pseudo-references for input material that is not a stored record (the task file itself).
+    INPUT_PREFIXES = ("task:",)
+
     def exists(self, ref: str) -> bool:
         if self.store.exists(ref):
             return True
+        if ref.startswith(self.INPUT_PREFIXES):
+            return True                     # whether it was actually given is checked by _allowed()
         if "#" in ref:
             paper, loc = self.paper_and_locator(ref)
             return paper is not None and self.locator_ok(paper, loc)[0]

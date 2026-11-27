@@ -5,8 +5,9 @@ through ``LLMGateway.call``. There is no per-task model selection and no fallbac
 """
 from __future__ import annotations
 
+import sys
 import time
-from typing import Optional
+from typing import Callable, Optional
 
 from ..budget import Budget, BudgetExceeded
 from ..models import ExecutionOrigin, ModelBinding
@@ -16,7 +17,9 @@ from .providers import LLMRequest, LLMResponse, Provider, ProviderError
 
 class LLMGateway:
     def __init__(self, provider: Provider, store: Store, budget: Budget, binding: Optional[ModelBinding],
-                 max_retries: int, pricing: dict | None = None, sleep=time.sleep):
+                 max_retries: int, pricing: dict | None = None, sleep=time.sleep,
+                 request_timeout: Optional[float] = None, heartbeat_seconds: float = 30.0,
+                 log: Optional[Callable[[str], None]] = None):
         if provider.origin == ExecutionOrigin.live and binding is None:
             raise ValueError("live calls require the run's ModelBinding")
         if provider.origin == ExecutionOrigin.fixture and binding is not None:
@@ -28,6 +31,9 @@ class LLMGateway:
         self.max_retries = max_retries
         self.pricing = pricing or {}
         self.sleep = sleep
+        self.request_timeout = request_timeout
+        self.heartbeat_seconds = heartbeat_seconds
+        self.log = log or (lambda m: print(m, file=sys.stderr, flush=True))
 
     @property
     def origin(self) -> ExecutionOrigin:
@@ -52,6 +58,8 @@ class LLMGateway:
             if usd_cap is not None:
                 request_dims["usd"] = usd_cap
             timeout = self.budget.action_deadline_seconds()
+            if self.request_timeout:
+                timeout = min(timeout, self.request_timeout)
             if timeout <= 0:
                 raise ProviderError("TIMEOUT", "no run time left for a model call")
             try:
@@ -60,6 +68,21 @@ class LLMGateway:
             except BudgetExceeded:
                 raise
             started = time.time()
+            calls = f"{self.budget.used('llm_calls'):.0f}/{self.budget.limits['llm_calls']:.0f}"
+            last_beat = [started]
+
+            def progress(status: str, elapsed: float, response_id: Optional[str] = None,
+                         _task=request.task_type, _attempt=attempt) -> None:
+                if response_id and status == "submitted":
+                    self.store.event("llm_request_submitted", {"action_id": action_id, "task_type": _task,
+                                                               "attempt": _attempt, "response_id": response_id})
+                if time.time() - last_beat[0] >= self.heartbeat_seconds:
+                    last_beat[0] = time.time()
+                    self.log(f"[pra] waiting for model: task={_task} attempt={_attempt} status={status} "
+                             f"elapsed={elapsed:.0f}s timeout={timeout:.0f}s llm_calls={calls}")
+
+            if hasattr(self.provider, "progress"):
+                self.provider.progress = progress
             try:
                 response = self.provider.complete(request, timeout=timeout)
             except ProviderError as err:

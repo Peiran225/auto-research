@@ -192,7 +192,9 @@ class Controller:
                 provider = OpenAIResponsesProvider(self.binding, self.config.llm.credential_env)
             self._gateway = LLMGateway(provider, self.store, self.budget, self.binding,
                                        max_retries=self.config.limits.max_retries_per_action,
-                                       pricing=self.config.llm.pricing)
+                                       pricing=self.config.llm.pricing,
+                                       request_timeout=self.config.llm.request_timeout_seconds,
+                                       log=self.log)
         return self._gateway
 
     @property
@@ -220,7 +222,11 @@ class Controller:
         return self._lit
 
     # ================================================================== top level
-    def run(self, until: Optional[str] = None) -> DecisionRun:
+    def run(self, until: Optional[str] = None, retry_failed: bool = False) -> DecisionRun:
+        if retry_failed and self.drun.operation_status in (OperationStatus.failed, OperationStatus.blocked_dependency):
+            self.store.event("run_reopened", {"previous_status": self.drun.operation_status.value,
+                                              "previous_error": (self.drun.error or "")[:300]})
+            self.drun.operation_status, self.drun.error = OperationStatus.paused, None
         self.store.acquire_lock()
         try:
             if self.config.mode == "offline_local":

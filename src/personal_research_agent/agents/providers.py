@@ -81,10 +81,17 @@ def _parse_json(text: str) -> tuple[Optional[dict], Optional[str]]:
 class OpenAIResponsesProvider:
     origin = ExecutionOrigin.live
 
-    def __init__(self, binding: ModelBinding, credential_env: str = "OPENAI_API_KEY", client: Any = None):
+    POLL_SECONDS = 10.0
+
+    def __init__(self, binding: ModelBinding, credential_env: str = "OPENAI_API_KEY", client: Any = None,
+                 sleep=None):
+        import time as _time
+
         self.binding = binding
         self.credential_env = credential_env
         self._client = client
+        self.sleep = sleep or _time.sleep
+        self.progress = lambda status, elapsed, response_id=None: None   # set by the gateway
 
     # The request is assembled in one place so that tests can assert its exact shape.
     def build_request_kwargs(self, request: LLMRequest) -> dict[str, Any]:
@@ -98,7 +105,10 @@ class OpenAIResponsesProvider:
             "text": {"format": {"type": "json_schema", "name": request.schema_name,
                                 "schema": request.output_schema, "strict": False}},
             "max_output_tokens": request.max_output_tokens,
-            "store": False,
+            # Pro-mode requests can run for many minutes: submit in background mode and poll.
+            # Background responses must be stored server-side (OpenAI retains them per its policy).
+            "background": True,
+            "store": True,
         }
 
     def client(self, timeout: float) -> Any:
@@ -115,12 +125,36 @@ class OpenAIResponsesProvider:
     def complete(self, request: LLMRequest, timeout: float) -> LLMResponse:
         kwargs = self.build_request_kwargs(request)
         assert "effort" not in kwargs["reasoning"]
+        import time as _time
+
+        started = _time.time()
         try:
-            resp = self.client(timeout).responses.create(**kwargs)
+            client = self.client(min(timeout, 120))
+            resp = client.responses.create(**kwargs)
+            self.progress("submitted", 0.0, getattr(resp, "id", None))
+            while getattr(resp, "status", None) in ("queued", "in_progress"):
+                elapsed = _time.time() - started
+                if elapsed > timeout:
+                    try:
+                        client.responses.cancel(resp.id)
+                    except Exception:
+                        pass
+                    raise ProviderError("TIMEOUT", f"no response within {timeout:.0f}s (cancelled {resp.id})")
+                self.progress(resp.status, elapsed, resp.id)
+                self.sleep(self.POLL_SECONDS)
+                resp = client.responses.retrieve(resp.id)
         except ProviderError:
             raise
         except Exception as exc:
             raise _map_openai_error(exc) from exc
+        status = getattr(resp, "status", None)
+        if status in ("failed", "cancelled"):
+            err = getattr(resp, "error", None)
+            raise ProviderError("PROVIDER_ERROR", f"response {status}: {getattr(err, 'message', err)}")
+        if status == "incomplete":
+            details = getattr(resp, "incomplete_details", None)
+            raise ProviderError("INCOMPLETE", f"response incomplete: {getattr(details, 'reason', details)} "
+                                              "(raise llm.max_output_tokens_per_call if it is max_output_tokens)")
         returned_model = getattr(resp, "model", None)
         reasoning_obj = getattr(resp, "reasoning", None)
         returned_reasoning: dict[str, Any] = {}

@@ -439,3 +439,79 @@ def test_t19_model_override_must_be_explicit_and_is_recorded():
     official = build_binding(_live_llm(), "r3", {})
     assert official.mapping_check["model_choice"].startswith("official")
     assert b.binding_hash != official.binding_hash
+
+
+def test_task_input_reference_is_citable(runs_root):
+    """Regression (first live run): answers citing the task material as `task:<id>` were rejected."""
+    from personal_research_agent.agents.query import QueryInput
+    from personal_research_agent.controller import Controller
+
+    _run("t_taskref", TASK_WM, "--until", "clarify")
+    ctrl = Controller.open("t_taskref", runs_root)
+    tpl = load_template("map_field")
+    qi = QueryInput("map_field", {}, input_refs=["task:hierarchical_world_model"])
+    ans = [{"question_id": f"q{i}", "statement": "s", "epistemic_status": "fact", "basis_type": "input_given",
+            "source_refs": [{"source_id": "task:hierarchical_world_model"}]} for i in range(1, 5)]
+    assert ctrl.runner._validate_raw({"answers": ans, "payload": {"field_problems": []}}, None, tpl, qi) == []
+    other = [dict(a, source_refs=[{"source_id": "task:some_other_task"}]) for a in ans]
+    errs = ctrl.runner._validate_raw({"answers": other, "payload": {"field_problems": []}}, None, tpl, qi)
+    assert any("not part of the input" in e for e in errs)
+
+
+def test_background_polling_reports_progress_and_times_out(store, budget):
+    """Pro-mode calls run in background mode: progress is reported while queued/in_progress and the
+    request is cancelled at its timeout."""
+    binding = build_binding(_live_llm(), "rbg", {})
+
+    class Slow:
+        def __init__(self):
+            self.cancelled = []
+            self.retrieved = 0
+            outer = self
+
+            class R:
+                def create(self, **kw):
+                    assert kw["background"] is True and kw["store"] is True
+                    return type("Resp", (), {"id": "resp_x", "status": "queued"})()
+
+                def retrieve(self, rid):
+                    outer.retrieved += 1
+                    return type("Resp", (), {"id": rid, "status": "in_progress"})()
+
+                def cancel(self, rid):
+                    outer.cancelled.append(rid)
+            self.responses = R()
+
+    client = Slow()
+    clock = {"t": 0.0}
+    import personal_research_agent.agents.providers as prov_mod
+    prov = OpenAIResponsesProvider(binding, client=client, sleep=lambda s: clock.__setitem__("t", clock["t"] + s))
+    seen = []
+    prov.progress = lambda status, elapsed, rid=None: seen.append(status)
+    import time as _t
+    real = _t.time
+    start = real()
+    _t.time = lambda: start + clock["t"]
+    try:
+        with pytest.raises(ProviderError) as exc:
+            prov.complete(LLMRequest("clarify_problem", "d", {}, {}, "s", 100), timeout=35)
+    finally:
+        _t.time = real
+    assert exc.value.code == "TIMEOUT" and client.cancelled == ["resp_x"]
+    assert seen[0] == "submitted" and "in_progress" in seen
+
+
+def test_resume_retry_failed_reuses_completed_steps(runs_root):
+    from personal_research_agent.controller import Controller
+    from personal_research_agent.models import OperationStatus
+
+    _run("t_retry", TASK_MDP, "--until", "map_field")
+    ctrl = Controller.open("t_retry", runs_root)
+    ctrl.drun.operation_status, ctrl.drun.error = OperationStatus.failed, "simulated provider bug"
+    ctrl.store.update(ctrl.drun)
+    before = _ledger(runs_root, "t_retry")
+    code, out = run_cli("resume", "--run-id", "t_retry")
+    assert "nothing to do" in out or _json(out)["operation_status"] == "failed"
+    code, out = run_cli("resume", "--run-id", "t_retry", "--retry-failed")
+    assert code == 0 and _json(out)["operation_status"] == "completed"
+    assert _ledger(runs_root, "t_retry")[: len(before)] == before

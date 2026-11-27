@@ -120,7 +120,8 @@ def run(task: Path = typer.Option(...), profile: Path = typer.Option(...), confi
 
 
 @app.command()
-def resume(run_id: str = typer.Option(...), until: Optional[str] = typer.Option(None)):
+def resume(run_id: str = typer.Option(...), until: Optional[str] = typer.Option(None),
+           retry_failed: bool = typer.Option(False, help="reopen a failed/blocked run; completed steps are reused, failed ones retried within limits")):
     """Idempotent resume: finished runs are not re-run; completed actions are not repeated or re-charged."""
     from .controller import Controller
 
@@ -134,7 +135,7 @@ def resume(run_id: str = typer.Option(...), until: Optional[str] = typer.Option(
         typer.echo(f"run {run_id} already completed; nothing to resume")
         typer.echo(json.dumps(_summary(ctrl.drun), indent=2, ensure_ascii=False))
         raise typer.Exit(EXIT_OK)
-    drun = ctrl.run(until)
+    drun = ctrl.run(until, retry_failed=retry_failed)
     typer.echo(json.dumps(_summary(drun), indent=2, ensure_ascii=False))
     raise typer.Exit(_exit_for(drun))
 
