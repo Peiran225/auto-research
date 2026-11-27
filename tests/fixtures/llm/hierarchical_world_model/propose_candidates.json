@@ -1,0 +1,166 @@
+{
+  "answers": [
+    {
+      "question_id": "q1",
+      "statement": "Open: whether nested dependence changes the trained solution at all, and whether that matters for planning return.",
+      "epistemic_status": "inference",
+      "premise_ids": [],
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_wm_bilevel_meta",
+          "locator": "§3",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q2",
+      "statement": "W1 and W2 below state hypotheses, mechanisms, nearest neighbours, checks and abandon conditions.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q1"
+      ]
+    },
+    {
+      "question_id": "q3",
+      "statement": "Both are hypotheses.",
+      "epistemic_status": "hypothesis",
+      "prediction": "the toy check separates them",
+      "falsification": "the toy check is uninformative"
+    },
+    {
+      "question_id": "q4",
+      "statement": "W2 (alternating suffices) is the mechanism-different alternative; not every problem is rewritten as bilevel.",
+      "epistemic_status": "inference",
+      "premise_ids": [],
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_wm_multiloss_alternating",
+          "locator": "§2",
+          "read_scope": "partial_text"
+        }
+      ]
+    }
+  ],
+  "payload": {
+    "candidates": [
+      {
+        "key": "W1",
+        "title": "Nested training of the high-level model through the low-level solution map",
+        "problem_scope": "two-level world models with an actual solution dependence",
+        "hypothesis": "Training the high-level world model through the low-level solution map improves long-horizon planning return over alternating multi-loss training at matched compute",
+        "mechanism": "hypergradient through y*(x)",
+        "increment": "planning-return test of nested training (not prediction error)",
+        "nearest_neighbors": [
+          "paper_fixture_wm_bilevel_meta",
+          "paper_fixture_wm_temporal_hierarchy"
+        ],
+        "claims": [
+          {
+            "id": "C1",
+            "scope": "finite_instance",
+            "check_key": "nested_differs_from_alternating",
+            "expects_holds": true,
+            "statement": "On a two-level quadratic instance, nested (solution-dependent) training and alternating two-loss training reach different solutions, so the two readings of multi-level optimisation are distinct problems"
+          },
+          {
+            "id": "C2",
+            "scope": "general",
+            "statement": "Training the high-level world model through the low-level solution map improves long-horizon planning return over alternating multi-loss training at matched compute"
+          }
+        ],
+        "validation_protocol": {
+          "decision_signal": "planning return (undecided by user)"
+        },
+        "abandon_conditions": [
+          "toy check shows no difference",
+          "no runnable baseline"
+        ],
+        "research_branch": "empirical",
+        "cheapest_check": {
+          "action_type": "cpu_pilot",
+          "inputs": {
+            "pilot_id": "nested_vs_alternating"
+          }
+        }
+      },
+      {
+        "key": "W2",
+        "title": "Alternating multi-loss training suffices",
+        "problem_scope": "same two-level models",
+        "hypothesis": "Alternating multi-loss updates reach the same solution as nested training, so nested optimisation adds nothing",
+        "mechanism": "separate losses, alternating updates",
+        "increment": "simpler training if true",
+        "nearest_neighbors": [
+          "paper_fixture_wm_multiloss_alternating"
+        ],
+        "claims": [
+          {
+            "id": "C1",
+            "scope": "general",
+            "check_key": "nested_differs_from_alternating",
+            "expects_holds": false,
+            "statement": "Alternating multi-loss updates reach the same solution as nested training, so nested optimisation adds nothing"
+          }
+        ],
+        "validation_protocol": {},
+        "abandon_conditions": [
+          "a counterexample instance"
+        ],
+        "research_branch": "empirical",
+        "cheapest_check": {
+          "action_type": "cpu_pilot",
+          "inputs": {
+            "pilot_id": "nested_vs_alternating"
+          }
+        }
+      }
+    ],
+    "no_alternative_reason": null,
+    "unknowns": [
+      {
+        "key": "wm_nested",
+        "question": "Do nested and alternating training reach different solutions on a toy two-level problem?",
+        "affects": [
+          "W1",
+          "W2"
+        ],
+        "importance": "high",
+        "available_checks": [
+          {
+            "action_type": "cpu_pilot",
+            "purpose": "preliminary_check",
+            "inputs": {
+              "pilot_id": "nested_vs_alternating"
+            },
+            "cost": {
+              "pilots": 1
+            },
+            "can_disqualify": true
+          }
+        ]
+      },
+      {
+        "key": "wm_baseline",
+        "question": "Is there a runnable world-model baseline with a planning-return evaluator?",
+        "affects": [
+          "W1"
+        ],
+        "importance": "high",
+        "available_checks": [
+          {
+            "action_type": "search_literature",
+            "purpose": "information_gathering",
+            "inputs": {
+              "query": "hierarchical world model planning benchmark code",
+              "requires_live": true
+            },
+            "cost": {
+              "search_queries": 1
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

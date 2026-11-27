@@ -1,0 +1,117 @@
+{
+  "answers": [
+    {
+      "question_id": "q1",
+      "statement": "New: the voi_identity search reports that the identity holds on every instance of the finite family.",
+      "epistemic_status": "fact",
+      "basis_type": "tool_observation",
+      "source_refs": [
+        {
+          "source_id": "artifact:counterexample_search_voi_identity.json",
+          "locator": "instances"
+        }
+      ]
+    },
+    {
+      "question_id": "q2",
+      "statement": "It applies to CAND-B v1 C1 as finite-instance support only.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q1"
+      ]
+    },
+    {
+      "question_id": "q3",
+      "statement": "B C1 gains finite support; its general status stays unproven.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q2"
+      ]
+    },
+    {
+      "question_id": "q4",
+      "statement": "No ranking change: novelty remains unknown.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q3"
+      ]
+    },
+    {
+      "question_id": "q5",
+      "statement": "The next informative step for B is checking the proof obligations behind the identity.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q3"
+      ]
+    },
+    {
+      "question_id": "q6",
+      "statement": "Run check_theory on CAND-B; outcome updates proof status (draft or gap_found), never formally_verified.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q5"
+      ]
+    },
+    {
+      "question_id": "q7",
+      "statement": "Not a duplicate.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q6"
+      ]
+    },
+    {
+      "question_id": "q8",
+      "statement": "Continue.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q5"
+      ]
+    },
+    {
+      "question_id": "q9",
+      "statement": "No stop.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q8"
+      ]
+    }
+  ],
+  "payload": {
+    "new_evidence_refs": [
+      "artifact:counterexample_search_voi_identity.json"
+    ],
+    "duplicate_evidence_refs": [],
+    "assessment_updates": [],
+    "ranking_changes": [],
+    "next_action": {
+      "action_type": "check_theory",
+      "purpose": "preliminary_check",
+      "target_unknown_key": "proof_B",
+      "candidate_keys": [
+        "CAND-B"
+      ],
+      "inputs": {
+        "review": "derivation"
+      },
+      "expected_branches": [
+        {
+          "if": "gap",
+          "then": "narrow B"
+        },
+        {
+          "if": "draft",
+          "then": "keep"
+        }
+      ],
+      "cost_cap": {
+        "llm_calls": 1
+      },
+      "why_now": "general claim needs proof obligations, not more numbers"
+    },
+    "stop_recommendation": {
+      "stop": false
+    },
+    "revision_proposals": []
+  }
+}

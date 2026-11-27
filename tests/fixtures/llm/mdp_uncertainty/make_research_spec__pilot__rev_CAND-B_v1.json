@@ -1,0 +1,76 @@
+{
+  "answers": [
+    {
+      "question_id": "q1",
+      "statement": "The pilot tests the stated claim; an instance satisfying all assumptions with a different outcome refutes it.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q3"
+      ]
+    },
+    {
+      "question_id": "q2",
+      "statement": "Baseline: the open-loop policy class; environment: the finite family in the input plan; no data; CPU only.",
+      "epistemic_status": "fact",
+      "basis_type": "input_given"
+    },
+    {
+      "question_id": "q3",
+      "statement": "Frozen: claim, family, policy class, working equivalence definition. Nothing required for the pilot is missing.",
+      "epistemic_status": "fact",
+      "basis_type": "input_given"
+    },
+    {
+      "question_id": "q4",
+      "statement": "Continue if no counterexample; a counterexample abandons the claim. Finite support never proves the general statement.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q3"
+      ]
+    },
+    {
+      "question_id": "q5",
+      "statement": "Not a v3 task: a registered local theory pilot (exact computation).",
+      "epistemic_status": "fact",
+      "basis_type": "input_given"
+    }
+  ],
+  "payload": {
+    "candidate_key": "CAND-B",
+    "study_stage": "pilot",
+    "research_branch": "theoretical",
+    "hypothesis": "In the binary-action family with immediately observed rewards r_t = 1[a_t = theta_t], V*_B(history) equals V*_A(open-loop), so the gap V*_A(history) - V*_B(history) equals the value of using history in A",
+    "falsification": "an instance in the family with V*_B(history) != V*_A(open-loop)",
+    "baselines": [
+      "open-loop (history-independent) policy class"
+    ],
+    "environment": {
+      "family": "binary actions, rewards observed, H<=3, p in {1/2,1/3,2/3,1/4}"
+    },
+    "evaluation": {
+      "method": "finite-family counterexample search",
+      "equivalence": "equal optimal value (working assumption)"
+    },
+    "resources": {
+      "cpu_seconds": 30,
+      "gpu": 0
+    },
+    "continue_criteria": [
+      "no counterexample in the family"
+    ],
+    "abandon_criteria": [
+      "a counterexample satisfying all assumptions"
+    ],
+    "theorem_statement": "In the binary-action family with immediately observed rewards r_t = 1[a_t = theta_t], V*_B(history) equals V*_A(open-loop), so the gap V*_A(history) - V*_B(history) equals the value of using history in A",
+    "assumptions": [
+      "same marginal of theta",
+      "rewards observed immediately",
+      "same policy class in A and B"
+    ],
+    "policy_information_class": "deterministic policies over own past actions and rewards (identical in A and B); randomised policies cannot do better",
+    "proof_obligations": [],
+    "counterexample_search_plan": null,
+    "review_method": "exact enumeration with belief-DP cross-check",
+    "missing": []
+  }
+}

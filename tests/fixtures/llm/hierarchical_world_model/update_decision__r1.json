@@ -1,0 +1,106 @@
+{
+  "answers": [
+    {
+      "question_id": "q1",
+      "statement": "Only the initial synthetic reading so far.",
+      "epistemic_status": "inference",
+      "premise_ids": [],
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_wm_bilevel_meta",
+          "locator": "§2",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q2",
+      "statement": "Applies to W1 and W2.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q1"
+      ]
+    },
+    {
+      "question_id": "q3",
+      "statement": null,
+      "epistemic_status": "unknown",
+      "missing_information": "No judgement changed yet."
+    },
+    {
+      "question_id": "q4",
+      "statement": "Both unresolved on novelty.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q3"
+      ]
+    },
+    {
+      "question_id": "q5",
+      "statement": "The toy check decides between W1's mechanism and W2's claim.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q4"
+      ]
+    },
+    {
+      "question_id": "q6",
+      "statement": "Run the nested_vs_alternating pilot; different solutions refute W2 C1 and support W1 C1 (toy scope only).",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q5"
+      ]
+    },
+    {
+      "question_id": "q7",
+      "statement": "Not a duplicate.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q6"
+      ]
+    },
+    {
+      "question_id": "q8",
+      "statement": "Continue.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q5"
+      ]
+    },
+    {
+      "question_id": "q9",
+      "statement": "No stop.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q8"
+      ]
+    }
+  ],
+  "payload": {
+    "next_action": {
+      "action_type": "cpu_pilot",
+      "purpose": "preliminary_check",
+      "target_unknown_key": "wm_nested",
+      "candidate_keys": [
+        "W1",
+        "W2"
+      ],
+      "inputs": {
+        "pilot_id": "nested_vs_alternating"
+      },
+      "expected_branches": [
+        {
+          "if": "differ",
+          "then": "reject W2; W1 mechanism plausible"
+        }
+      ],
+      "cost_cap": {
+        "pilots": 1
+      },
+      "why_now": "cheapest check that can disqualify a candidate"
+    },
+    "stop_recommendation": {
+      "stop": false
+    }
+  }
+}

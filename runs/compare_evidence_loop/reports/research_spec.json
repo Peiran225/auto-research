@@ -1,0 +1,151 @@
+[
+  {
+    "schema_version": 1,
+    "id": "spec_18eb27805ade391a",
+    "created_at": "2026-11-25T02:05:08+00:00",
+    "origin": "fixture",
+    "source": "query:qr_18eb27805adcc1a8",
+    "study_stage": "pilot",
+    "candidate_revision_id": "rev_CAND-A_v1",
+    "protocol_id": "proto_CAND-A",
+    "protocol_version": 1,
+    "protocol_hash": "bb96a982670853c0169e0105af3d624cba71bece5ac0e5ac20637cb41ff136bd",
+    "research_branch": "theoretical",
+    "hypothesis": "For finite-horizon MDPs with a hidden reward parameter, fixed-per-episode and i.i.d.-per-step parameter uncertainty with the same marginal give the same optimal value under the same history-dependent policy class",
+    "falsification": "unequal optimal values on an instance satisfying the assumptions",
+    "baselines": [
+      "open-loop (history-independent) policy class"
+    ],
+    "environment": {
+      "family": "binary actions, rewards observed, H<=3, p in {1/2,1/3,2/3,1/4}"
+    },
+    "resources": {
+      "cpu_seconds": 30,
+      "gpu": 0
+    },
+    "evaluation": {
+      "equivalence": "equal optimal value (working assumption)",
+      "method": "exact enumeration (H=2, p=1/2)"
+    },
+    "continue_criteria": [
+      "no counterexample in the family"
+    ],
+    "abandon_criteria": [
+      "a counterexample satisfying all assumptions"
+    ],
+    "theorem_statement": "For finite-horizon MDPs with a hidden reward parameter, fixed-per-episode and i.i.d.-per-step parameter uncertainty with the same marginal give the same optimal value under the same history-dependent policy class",
+    "assumptions": [
+      "same marginal of theta",
+      "rewards observed immediately",
+      "same policy class in A and B"
+    ],
+    "policy_information_class": "deterministic policies over own past actions and rewards (identical in A and B); randomised policies cannot do better",
+    "proof_obligations": [],
+    "counterexample_search_plan": {
+      "pilot_id": "mdp_exact_enumeration"
+    },
+    "review_method": "exact enumeration with belief-DP cross-check",
+    "missing": [],
+    "frozen": true
+  },
+  {
+    "schema_version": 1,
+    "id": "spec_18eb27805dffe0bf",
+    "created_at": "2026-11-25T02:05:08+00:00",
+    "origin": "fixture",
+    "source": "query:qr_18eb27805dfd12e3",
+    "study_stage": "pilot",
+    "candidate_revision_id": "rev_CAND-B_v1",
+    "protocol_id": "proto_CAND-B",
+    "protocol_version": 1,
+    "protocol_hash": "b77b2591e15b44eef34b6376cbd2021b86f38fb590b952f213851cf29e56f9a8",
+    "research_branch": "theoretical",
+    "hypothesis": "In the binary-action family with immediately observed rewards r_t = 1[a_t = theta_t], V*_B(history) equals V*_A(open-loop), so the gap V*_A(history) - V*_B(history) equals the value of using history in A",
+    "falsification": "an instance in the family with V*_B(history) != V*_A(open-loop)",
+    "baselines": [
+      "open-loop (history-independent) policy class"
+    ],
+    "environment": {
+      "family": "binary actions, rewards observed, H<=3, p in {1/2,1/3,2/3,1/4}"
+    },
+    "resources": {
+      "cpu_seconds": 30,
+      "gpu": 0
+    },
+    "evaluation": {
+      "equivalence": "equal optimal value (working assumption)",
+      "method": "finite-family counterexample search"
+    },
+    "continue_criteria": [
+      "no counterexample in the family"
+    ],
+    "abandon_criteria": [
+      "a counterexample satisfying all assumptions"
+    ],
+    "theorem_statement": "In the binary-action family with immediately observed rewards r_t = 1[a_t = theta_t], V*_B(history) equals V*_A(open-loop), so the gap V*_A(history) - V*_B(history) equals the value of using history in A",
+    "assumptions": [
+      "same marginal of theta",
+      "rewards observed immediately",
+      "same policy class in A and B"
+    ],
+    "policy_information_class": "deterministic policies over own past actions and rewards (identical in A and B); randomised policies cannot do better",
+    "proof_obligations": [],
+    "counterexample_search_plan": {
+      "claim": "voi_identity",
+      "pilot_id": "mdp_counterexample"
+    },
+    "review_method": "exact enumeration with belief-DP cross-check",
+    "missing": [],
+    "frozen": true
+  },
+  {
+    "schema_version": 1,
+    "id": "spec_18eb27806541d5c7",
+    "created_at": "2026-11-25T02:05:08+00:00",
+    "origin": "fixture",
+    "source": "query:qr_18eb2780653ecbac",
+    "study_stage": "pilot",
+    "candidate_revision_id": "rev_CAND-A_v2",
+    "protocol_id": "proto_CAND-A",
+    "protocol_version": 2,
+    "protocol_hash": "de3b66baaa1ed02f14cfb84c797c4d0d8b1bb2950b7172c916ef8e4d4651328c",
+    "research_branch": "theoretical",
+    "hypothesis": "Under history-independent (open-loop) policies, fixed-per-episode and i.i.d.-per-step parameter uncertainty with the same marginal give the same optimal value",
+    "falsification": "an instance with unequal open-loop optimal values",
+    "baselines": [
+      "open-loop (history-independent) policy class"
+    ],
+    "environment": {
+      "family": "binary actions, rewards observed, H<=3, p in {1/2,1/3,2/3,1/4}"
+    },
+    "resources": {
+      "cpu_seconds": 30,
+      "gpu": 0
+    },
+    "evaluation": {
+      "equivalence": "equal optimal value (working assumption)",
+      "method": "finite-family counterexample search"
+    },
+    "continue_criteria": [
+      "no counterexample in the family"
+    ],
+    "abandon_criteria": [
+      "a counterexample satisfying all assumptions"
+    ],
+    "theorem_statement": "Under history-independent (open-loop) policies, fixed-per-episode and i.i.d.-per-step parameter uncertainty with the same marginal give the same optimal value",
+    "assumptions": [
+      "same marginal of theta",
+      "rewards observed immediately",
+      "same policy class in A and B"
+    ],
+    "policy_information_class": "deterministic policies over own past actions and rewards (identical in A and B); randomised policies cannot do better",
+    "proof_obligations": [],
+    "counterexample_search_plan": {
+      "claim": "eq_open",
+      "pilot_id": "mdp_counterexample"
+    },
+    "review_method": "exact enumeration with belief-DP cross-check",
+    "missing": [],
+    "frozen": true
+  }
+]

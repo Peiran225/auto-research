@@ -1,0 +1,16 @@
+schema_version: 1
+task_id: mdp_uncertainty
+idea: "MDP 里不同形式的不确定性是否等价"
+target_venues: [NeurIPS, ICML, ICLR, CoRL]
+research_branch: theoretical
+metrics:
+  status: undecided
+  primary: null
+  secondary: []
+clarification_requirements:
+  - uncertainty_object
+  - temporal_dependence
+  - information_available_to_policy
+  - decision_objective
+  - policy_class
+  - equivalence_definition

@@ -1,0 +1,42 @@
+{
+  "answers": [
+    {
+      "question_id": "q1",
+      "statement": "Each audited claim cites a computation artifact produced in this run.",
+      "epistemic_status": "fact",
+      "basis_type": "tool_observation",
+      "source_refs": [
+        {
+          "source_id": "artifact:mdp_values.json",
+          "locator": "values"
+        }
+      ]
+    },
+    {
+      "question_id": "q2",
+      "statement": "The artifacts were produced under the pilot protocols frozen for the same revisions.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q1"
+      ]
+    },
+    {
+      "question_id": "q3",
+      "statement": "Finite-family support does not cover the general statements; refutations rest on exact counterexamples.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q1"
+      ]
+    },
+    {
+      "question_id": "q4",
+      "statement": null,
+      "epistemic_status": "unknown",
+      "missing_information": "Missing: general proofs (O3) and a live novelty check."
+    }
+  ],
+  "payload": {
+    "checked": "all claims",
+    "overreach": "general claims are not marked supported"
+  }
+}

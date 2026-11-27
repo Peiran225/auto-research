@@ -22,3 +22,16 @@ research/projects/*/09_experiments/runs/
 *.out
 *.synctex.gz
 .pytest_cache/
+
+# personal-research-agent runs: keep only the acceptance / comparison / v3-validation evidence
+runs/*
+!runs/acceptance_mdp/
+!runs/acceptance_world_model/
+!runs/compare_one_shot/
+!runs/compare_evidence_loop/
+!runs/compare_personalized_loop/
+!runs/_v3_validation/
+!runs/acceptance_resume/
+*.sqlite-wal
+*.sqlite-shm
+.env

@@ -1,0 +1,41 @@
+{
+  "answers": [
+    {
+      "question_id": "q1",
+      "statement": "W1 C1 and W2 C1 cite the toy pilot artifact.",
+      "epistemic_status": "fact",
+      "basis_type": "tool_observation",
+      "source_refs": [
+        {
+          "source_id": "artifact:nested_vs_alternating.json",
+          "locator": "closed_form"
+        }
+      ]
+    },
+    {
+      "question_id": "q2",
+      "statement": "Same pilot protocol as the claims' revision.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q1"
+      ]
+    },
+    {
+      "question_id": "q3",
+      "statement": "The toy result does not reach W1's planning claim.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q1"
+      ]
+    },
+    {
+      "question_id": "q4",
+      "statement": null,
+      "epistemic_status": "unknown",
+      "missing_information": "Missing: any world-model experiment."
+    }
+  ],
+  "payload": {
+    "checked": "all claims"
+  }
+}

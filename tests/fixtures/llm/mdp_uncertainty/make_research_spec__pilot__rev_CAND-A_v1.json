@@ -1,0 +1,76 @@
+{
+  "answers": [
+    {
+      "question_id": "q1",
+      "statement": "The pilot tests the stated claim; an instance satisfying all assumptions with a different outcome refutes it.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q3"
+      ]
+    },
+    {
+      "question_id": "q2",
+      "statement": "Baseline: the open-loop policy class; environment: the finite family in the input plan; no data; CPU only.",
+      "epistemic_status": "fact",
+      "basis_type": "input_given"
+    },
+    {
+      "question_id": "q3",
+      "statement": "Frozen: claim, family, policy class, working equivalence definition. Nothing required for the pilot is missing.",
+      "epistemic_status": "fact",
+      "basis_type": "input_given"
+    },
+    {
+      "question_id": "q4",
+      "statement": "Continue if no counterexample; a counterexample abandons the claim. Finite support never proves the general statement.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q3"
+      ]
+    },
+    {
+      "question_id": "q5",
+      "statement": "Not a v3 task: a registered local theory pilot (exact computation).",
+      "epistemic_status": "fact",
+      "basis_type": "input_given"
+    }
+  ],
+  "payload": {
+    "candidate_key": "CAND-A",
+    "study_stage": "pilot",
+    "research_branch": "theoretical",
+    "hypothesis": "For finite-horizon MDPs with a hidden reward parameter, fixed-per-episode and i.i.d.-per-step parameter uncertainty with the same marginal give the same optimal value under the same history-dependent policy class",
+    "falsification": "unequal optimal values on an instance satisfying the assumptions",
+    "baselines": [
+      "open-loop (history-independent) policy class"
+    ],
+    "environment": {
+      "family": "binary actions, rewards observed, H<=3, p in {1/2,1/3,2/3,1/4}"
+    },
+    "evaluation": {
+      "method": "exact enumeration (H=2, p=1/2)",
+      "equivalence": "equal optimal value (working assumption)"
+    },
+    "resources": {
+      "cpu_seconds": 30,
+      "gpu": 0
+    },
+    "continue_criteria": [
+      "no counterexample in the family"
+    ],
+    "abandon_criteria": [
+      "a counterexample satisfying all assumptions"
+    ],
+    "theorem_statement": "For finite-horizon MDPs with a hidden reward parameter, fixed-per-episode and i.i.d.-per-step parameter uncertainty with the same marginal give the same optimal value under the same history-dependent policy class",
+    "assumptions": [
+      "same marginal of theta",
+      "rewards observed immediately",
+      "same policy class in A and B"
+    ],
+    "policy_information_class": "deterministic policies over own past actions and rewards (identical in A and B); randomised policies cannot do better",
+    "proof_obligations": [],
+    "counterexample_search_plan": null,
+    "review_method": "exact enumeration with belief-DP cross-check",
+    "missing": []
+  }
+}

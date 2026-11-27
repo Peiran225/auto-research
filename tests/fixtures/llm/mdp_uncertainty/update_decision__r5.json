@@ -1,0 +1,91 @@
+{
+  "answers": [
+    {
+      "question_id": "q1",
+      "statement": "New: the open-loop equivalence holds on every instance of the finite family.",
+      "epistemic_status": "fact",
+      "basis_type": "tool_observation",
+      "source_refs": [
+        {
+          "source_id": "artifact:counterexample_search_eq_open.json",
+          "locator": "instances"
+        }
+      ]
+    },
+    {
+      "question_id": "q2",
+      "statement": "It applies to CAND-A v2 C1 as finite support only.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q1"
+      ]
+    },
+    {
+      "question_id": "q3",
+      "statement": null,
+      "epistemic_status": "unknown",
+      "missing_information": "The decisive dimension (novelty of A v2 and B) is still unknown."
+    },
+    {
+      "question_id": "q4",
+      "statement": "A v2 and B both remain unresolved; no forced winner.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q3"
+      ]
+    },
+    {
+      "question_id": "q5",
+      "statement": "The remaining decisive unknowns need a live literature search or the user's equivalence definition; neither is available offline.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q4"
+      ]
+    },
+    {
+      "question_id": "q6",
+      "statement": null,
+      "epistemic_status": "unknown",
+      "missing_information": "No allowed action in offline_local can check novelty; the next check is a live nearest-neighbour search."
+    },
+    {
+      "question_id": "q7",
+      "statement": "Repeating pilots or queries with unchanged inputs would add no information.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q5"
+      ]
+    },
+    {
+      "question_id": "q8",
+      "statement": "Stop as inconclusive within the offline budget; do not relax the gates.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q5"
+      ]
+    },
+    {
+      "question_id": "q9",
+      "statement": "Known: CAND-A v1 refuted by exact counterexample; B C1 finite support with draft proof. Unknown: novelty, equivalence definition. Next: live search for the value-of-history characterisation.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q8"
+      ]
+    }
+  ],
+  "payload": {
+    "new_evidence_refs": [
+      "artifact:counterexample_search_eq_open.json"
+    ],
+    "duplicate_evidence_refs": [],
+    "assessment_updates": [],
+    "ranking_changes": [],
+    "next_action": null,
+    "stop_recommendation": {
+      "stop": true,
+      "planning_outcome": "inconclusive",
+      "reason": "decisive unknowns need live search / user input"
+    },
+    "revision_proposals": []
+  }
+}

@@ -1,0 +1,179 @@
+{
+  "answers": [
+    {
+      "question_id": "q1",
+      "statement": "The idea names 'different forms of uncertainty' in MDPs and asks whether they are equivalent. It fixes neither the uncertainty object, its temporal dependence, the information available to the policy, the decision objective, the policy class, nor the notion of equivalence.",
+      "epistemic_status": "fact",
+      "basis_type": "input_given"
+    },
+    {
+      "question_id": "q2",
+      "statement": "Three terms change the problem: the uncertainty form (persistent parameter, per-step noise, adversarial set), 'equivalent' (equal optimal value, same optimal policy, or the same decision problem) and the policy class (history-dependent or open-loop).",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q1"
+      ]
+    },
+    {
+      "question_id": "q3",
+      "statement": "For interpretation I1 the variables are the hidden parameter theta, actions a_t and rewards r_t = 1[a_t = theta_t]; the observable information is the agent's own history. Working assumption (not given by the input): both scenarios use the same history-dependent policy class.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q2"
+      ]
+    },
+    {
+      "question_id": "q4",
+      "statement": "The input does not state the target conclusion; branches are kept: equivalence conditions (I1, I2) or a counterexample to the broad reading (I3).",
+      "epistemic_status": "fact",
+      "basis_type": "input_given"
+    },
+    {
+      "question_id": "q5",
+      "statement": "A small instance where fixed and per-step parameters give different optimal values under the same policy class would refute the broad equivalence reading.",
+      "epistemic_status": "hypothesis",
+      "prediction": "exact enumeration of a two-step binary instance gives unequal optimal values",
+      "falsification": "equal optimal values on every small instance of the family"
+    },
+    {
+      "question_id": "q6",
+      "statement": null,
+      "epistemic_status": "unknown",
+      "missing_information": "The intended equivalence definition (value, policy or problem). A working assumption (equal optimal value) is used for pilots only; formal verification waits for this definition."
+    },
+    {
+      "question_id": "q7",
+      "statement": "Search terms: Bayes-adaptive MDP / value of information (persistent parameter), rectangular robust uncertainty sets (worst case), per-step i.i.d. marginalisation (possible refutation of equivalence), minimax games (link to the user's methods).",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q2"
+      ]
+    }
+  ],
+  "payload": {
+    "interpretations": [
+      {
+        "id": "I1",
+        "description": "Same hidden reward parameter, fixed per episode (A) vs redrawn i.i.d. per step (B); compare optimal values under the same history-dependent policy class.",
+        "objects": [
+          "hidden parameter theta (uncertainty_object)",
+          "history-dependent policy"
+        ],
+        "variables": [
+          "theta",
+          "a_t",
+          "r_t"
+        ],
+        "information_conditions": [
+          "information_available_to_policy: own actions and rewards, identical in A and B",
+          "temporal_dependence: fixed vs i.i.d."
+        ],
+        "working_assumptions": [
+          "policy_class: deterministic history-dependent (randomised cannot do better)",
+          "decision_objective: expected return"
+        ],
+        "target_conclusion": "equivalence_conditions_or_counterexample",
+        "status": "kept"
+      },
+      {
+        "id": "I2",
+        "description": "Bayesian (expected) vs robust (worst-case) treatment of the same uncertainty set.",
+        "objects": [
+          "uncertainty set",
+          "prior"
+        ],
+        "information_conditions": [
+          "decision_objective differs: expectation vs worst case"
+        ],
+        "target_conclusion": "equivalence_conditions",
+        "status": "open"
+      },
+      {
+        "id": "I3",
+        "description": "All forms of MDP uncertainty are equivalent.",
+        "status": "rejected_too_broad",
+        "rejection_reason": "no uncertainty object, policy class or equivalence_definition is fixed; not testable as stated"
+      }
+    ],
+    "concepts": [
+      {
+        "canonical_name": "Bayes-adaptive MDP",
+        "aliases": [
+          "belief MDP"
+        ],
+        "role": "model of persistent parameter uncertainty",
+        "search_terms": [
+          "bayes adaptive"
+        ]
+      },
+      {
+        "canonical_name": "robust MDP",
+        "aliases": [
+          "rectangular uncertainty set"
+        ],
+        "role": "worst-case treatment of model uncertainty",
+        "search_terms": [
+          "robust rectangular"
+        ]
+      },
+      {
+        "canonical_name": "minimax optimization",
+        "aliases": [
+          "zero-sum game"
+        ],
+        "role": "solution concept for rectangular robust MDPs",
+        "search_terms": [
+          "minimax"
+        ]
+      },
+      {
+        "canonical_name": "value of information",
+        "aliases": [],
+        "role": "quantity that separates fixed from i.i.d. parameters",
+        "search_terms": [
+          "value information"
+        ]
+      }
+    ],
+    "unknowns": [
+      {
+        "key": "equivalence_definition",
+        "question": "Which equivalence notion is intended: equal optimal value, same optimal policy, or the same decision problem?",
+        "affects": [
+          "CAND-A",
+          "CAND-B"
+        ],
+        "importance": "high",
+        "available_checks": [],
+        "missing_material": "the user's intended definition; pilots use 'equal optimal value' as an explicit working assumption"
+      },
+      {
+        "key": "decision_objective",
+        "question": "Is the comparison under expected return or worst-case return?",
+        "affects": [],
+        "importance": "medium",
+        "available_checks": [],
+        "missing_material": "user intent"
+      }
+    ],
+    "metrics_status": "undecided",
+    "search_queries": [
+      {
+        "query": "bayes adaptive parameter uncertainty value information",
+        "purpose": "nearest"
+      },
+      {
+        "query": "robust rectangular uncertainty set minimax",
+        "purpose": "bottleneck"
+      },
+      {
+        "query": "iid per-step independent marginal transition",
+        "purpose": "refuting"
+      },
+      {
+        "query": "minimax adversarial game robust",
+        "purpose": "user_method_link"
+      }
+    ]
+  }
+}

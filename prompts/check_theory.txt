@@ -1,0 +1,13 @@
+template_version: check_theory-v1
+task_type: check_theory
+请核对该命题及其证明材料：
+
+1. 命题的量词、策略类与信息类分别是什么？与候选版本一致吗？
+2. 每条证明义务（proof obligation）是什么？各自依赖哪些假设、
+   引理或计算产物？
+3. 哪些推导步骤由所给材料完整支持？哪些存在缺口？指出位置。
+4. 是否存在满足全部假设的反例？区分已验证反例、待检查构造、
+   证明尝试失败和证据不足。
+5. 当前证明状态是 unproven、draft、gap_found、reviewed、
+   formally_verified 还是 disproved？说明核查方式（human、LLM、
+   checker）。数值检验只支持有限实例，不能证明一般定理。

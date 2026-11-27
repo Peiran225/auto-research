@@ -1,0 +1,71 @@
+{
+  "instance": {
+    "horizon": 2,
+    "actions": [
+      0,
+      1
+    ],
+    "reward": "r_t = 1[a_t = theta_t], observed immediately",
+    "prior": "P(theta=1) = 1/2",
+    "A": "theta drawn once per episode, fixed",
+    "B": "theta_t drawn i.i.d. per step"
+  },
+  "policy_classes": {
+    "history": "deterministic maps from own past (actions, rewards) to an action; same class in A and B",
+    "open_loop": "history-independent action sequences (control)"
+  },
+  "values": {
+    "A_history_optimal": {
+      "exact": "3/2",
+      "float": 1.5
+    },
+    "B_history_optimal": {
+      "exact": "1",
+      "float": 1.0
+    },
+    "A_open_loop_optimal": {
+      "exact": "1",
+      "float": 1.0
+    },
+    "B_open_loop_optimal": {
+      "exact": "1",
+      "float": 1.0
+    }
+  },
+  "argmax": {
+    "A_history": [
+      "∅->0; a1=0/r1=0->1; a1=0/r1=1->0",
+      "∅->1; a1=1/r1=0->0; a1=1/r1=1->1"
+    ],
+    "B_history": [
+      "∅->0; a1=0/r1=0->0; a1=0/r1=1->0",
+      "∅->0; a1=0/r1=0->0; a1=0/r1=1->1",
+      "∅->0; a1=0/r1=0->1; a1=0/r1=1->0",
+      "∅->0; a1=0/r1=0->1; a1=0/r1=1->1",
+      "∅->1; a1=1/r1=0->0; a1=1/r1=1->0",
+      "∅->1; a1=1/r1=0->0; a1=1/r1=1->1",
+      "∅->1; a1=1/r1=0->1; a1=1/r1=1->0",
+      "∅->1; a1=1/r1=0->1; a1=1/r1=1->1"
+    ],
+    "A_open_loop": [
+      "(0, 0)",
+      "(0, 1)",
+      "(1, 0)",
+      "(1, 1)"
+    ]
+  },
+  "counts": {
+    "history_policies": 8,
+    "open_loop_policies": 4
+  },
+  "cross_checks": {
+    "A_belief_dp": "3/2",
+    "B_per_step_dp": "1"
+  },
+  "method": "exhaustive enumeration of deterministic policies x exact outcome enumeration with fractions.Fraction",
+  "environment": {
+    "python": "3.13.18",
+    "platform": "Linux-6.18.44-fc-v880-x86_64-with-glibc2.39"
+  },
+  "status": "validation example (problem clarification / falsification demo); not a novel contribution"
+}

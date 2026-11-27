@@ -1,0 +1,88 @@
+{
+  "answers": [
+    {
+      "question_id": "q1",
+      "statement": "Three problems appear, each in one synthetic source: when persistent parameters make history valuable (Bayes-adaptive), when robust formulations reduce to per-step games, and when per-step randomness can be marginalised.",
+      "epistemic_status": "fact",
+      "basis_type": "source_report",
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_mdp_bayes_adaptive",
+          "locator": "§2",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q2",
+      "statement": "The sources state propositions rather than benchmarks; metrics are optimal values under a fixed policy class, which matches an equivalence question.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q1"
+      ]
+    },
+    {
+      "question_id": "q3",
+      "statement": "No source contradicts another; each problem rests on a single (synthetic) source, so none counts as consensus.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q1"
+      ]
+    },
+    {
+      "question_id": "q4",
+      "statement": "The idea maps to the first and third problems (persistent vs i.i.d. parameters); the second matters only for interpretation I2.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q1"
+      ]
+    }
+  ],
+  "payload": {
+    "field_problems": [
+      {
+        "id": "FP1",
+        "problem": "When does persistent parameter uncertainty make history valuable?",
+        "evidence_refs": [
+          "paper_fixture_mdp_bayes_adaptive#§2"
+        ],
+        "metrics": [
+          "optimal value under a fixed policy class"
+        ],
+        "baselines": [
+          "open-loop policy"
+        ],
+        "status": "single_source"
+      },
+      {
+        "id": "FP2",
+        "problem": "When do robust (worst-case) formulations reduce to per-step games?",
+        "evidence_refs": [
+          "paper_fixture_mdp_robust_rectangular#§2"
+        ],
+        "metrics": [
+          "robust value"
+        ],
+        "baselines": [],
+        "status": "single_source"
+      },
+      {
+        "id": "FP3",
+        "problem": "When can per-step randomness be marginalised into an ordinary MDP?",
+        "evidence_refs": [
+          "paper_fixture_mdp_iid_marginalization#§2"
+        ],
+        "metrics": [
+          "optimal value"
+        ],
+        "baselines": [],
+        "status": "single_source"
+      }
+    ],
+    "idea_maps_to": [
+      "FP1",
+      "FP3"
+    ],
+    "missing_for_link": null
+  }
+}

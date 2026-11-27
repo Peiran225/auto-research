@@ -1,0 +1,93 @@
+{
+  "probe": {
+    "backend": "ai_scientist_v3",
+    "available": true,
+    "capabilities": {
+      "scaffold": true,
+      "evaluator_check": true,
+      "cli": true,
+      "docker": false,
+      "real_agent": false,
+      "gpu": false,
+      "sealed_final": false,
+      "writing": "paper phase needs pdflatex or container mode",
+      "agent": {
+        "name": null,
+        "model": null,
+        "reasoning_effort": null,
+        "source": "backend.agent (independent of the front-end ModelBinding)"
+      }
+    },
+    "budget_dimensions": {
+      "wall_seconds": "strict (process group killed at the run deadline)",
+      "idea_cycles": "strict (investigation.execution.max_idea_cycles)",
+      "replications": "strict (ablations.execution.num_replications)",
+      "workers": "strict",
+      "usd": "best_effort (v3 records metrics/cost_summary.json; no hard cap)",
+      "tokens": "best_effort (recorded by v3, not capped)"
+    },
+    "missing": [
+      "backend.agent.name is not set (v3 agent is configured separately from the GPT-6 Pro front end)"
+    ],
+    "versions": {
+      "commit": "f8ae47d324edcb6c0d430552f1c7729748c0d411",
+      "uv_lock_sha256": "6fbaa72e26ca4fd408b9e0f8308b4e09d268bc7f7d6e3231ec20866518be008c",
+      "docker_server": "failed to connect to the docker API at unix:///var/run/docker.sock; check if the path is correct and if the daemon is running: dial unix /var/run/docker.sock: connect: no such file or directory\n"
+    }
+  },
+  "task_dir": "/home/user/auto-research/runs/_v3_validation/task_proto_mdp_policy_v1",
+  "snapshot_sha256": "4fbbe71269fa02d412874ef034474a55c6b29e7f293ff944f4c6274eeee5cf29",
+  "validation_ok": true,
+  "errors": [],
+  "checks": [
+    {
+      "name": "static",
+      "expect": "any",
+      "returncode": 0,
+      "seconds": 0.11,
+      "stdout_tail": "static checks: /home/user/auto-research/runs/_v3_validation/task_proto_mdp_policy_v1\n  ok    required files present; program_0 entrypoint resolves\n  ok    task.md '# Goal' section\n  ok    task.md '# Rubrics' section\n  ok    run snapshot size 0.0 MiB\n  ok    program_0 sources pass harness inspection\nPASS\n"
+    },
+    {
+      "name": "smoke",
+      "expect": "correct",
+      "returncode": 0,
+      "seconds": 0.22,
+      "stdout_tail": "static checks: /home/user/auto-research/runs/_v3_validation/task_proto_mdp_policy_v1\n  ok    required files present; program_0 entrypoint resolves\n  ok    task.md '# Goal' section\n  ok    task.md '# Rubrics' section\n  ok    run snapshot size 0.0 MiB\n  ok    program_0 sources pass harness inspection\nevaluator run: /home/user/auto-research/runs/_v3_validation/task_proto_mdp_policy_v1/program_0 via evaluate.py --profile smoke\n[evaluate] combined_score=1 over 1 run(s)\n  ok    evaluator finished in 0.1 s with exit code 0\n  ok    combined_score = 1.0\n  ok    correct = True\nPASS\n"
+    },
+    {
+      "name": "baseline_harness_wrapper",
+      "expect": "correct",
+      "returncode": 0,
+      "seconds": 0.33,
+      "stdout_tail": "static checks: /home/user/auto-research/runs/_v3_validation/task_proto_mdp_policy_v1\n  ok    required files present; program_0 entrypoint resolves\n  ok    task.md '# Goal' section\n  ok    task.md '# Rubrics' section\n  ok    run snapshot size 0.0 MiB\n  ok    program_0 sources pass harness inspection\nevaluator run: /home/user/auto-research/runs/_v3_validation/task_proto_mdp_policy_v1/program_0 via harness wrapper\nevaluation outputs: /tmp/check-task-c71quqtn/programs/.evaluation_outputs/program_0/attempt_42d8447ac01289b3\nevaluation runtime: /tmp/check-task-c71quqtn/programs/.evaluation_runtime/program_0/attempt_42d8447ac01289b3\n[evaluate] combined_score=1 over 1 run(s)\n  ok    evaluator finished in 0.2 s with exit code 0\n  ok    combined_score = 1.0\n  ok    correct = True\nPASS\n"
+    },
+    {
+      "name": "replications",
+      "expect": "correct",
+      "returncode": 0,
+      "seconds": 0.39,
+      "stdout_tail": "static checks: /home/user/auto-research/runs/_v3_validation/task_proto_mdp_policy_v1\n  ok    required files present; program_0 entrypoint resolves\n  ok    task.md '# Goal' section\n  ok    task.md '# Rubrics' section\n  ok    run snapshot size 0.0 MiB\n  ok    program_0 sources pass harness inspection\nevaluator run: /home/user/auto-research/runs/_v3_validation/task_proto_mdp_policy_v1/program_0 via harness wrapper\nevaluation outputs: /tmp/check-task-yyajnwgw/programs/.evaluation_outputs/program_0/attempt_f033898ba7665f3b\nevaluation runtime: /tmp/check-task-yyajnwgw/programs/.evaluation_runtime/program_0/attempt_f033898ba7665f3b\n[evaluate] combined_score=1 over 2 run(s)\n  ok    evaluator finished in 0.3 s with exit code 0\n  ok    combined_score = 1.0\n  ok    correct = True\nPASS\n"
+    },
+    {
+      "name": "negative_crash",
+      "expect": "incorrect",
+      "returncode": 0,
+      "seconds": 0.33,
+      "stdout_tail": "static checks: /home/user/auto-research/runs/_v3_validation/task_proto_mdp_policy_v1\n  ok    required files present; program_0 entrypoint resolves\n  ok    task.md '# Goal' section\n  ok    task.md '# Rubrics' section\n  ok    run snapshot size 0.0 MiB\n  ok    program_0 sources pass harness inspection\nevaluator run: /home/user/auto-research/runs/_v3_validation/negative_programs/crash via harness wrapper\nevaluation outputs: /tmp/check-task-p3o7bjp7/programs/.evaluation_outputs/program_0/attempt_e342a63e344d47e1\nevaluation runtime: /tmp/check-task-p3o7bjp7/programs/.evaluation_runtime/program_0/attempt_e342a63e344d47e1\n[evaluate] candidate failed: program exited with code 3; see stdout.log\n  ok    evaluator finished in 0.2 s with exit code 0\n  ok    combined_score = -1000000000.0\n  ok    correct = False (program exited with code 3; see stdout.log)\nPASS\n"
+    },
+    {
+      "name": "negative_self_reported_score",
+      "expect": "incorrect",
+      "returncode": 0,
+      "seconds": 0.33,
+      "stdout_tail": "static checks: /home/user/auto-research/runs/_v3_validation/task_proto_mdp_policy_v1\n  ok    required files present; program_0 entrypoint resolves\n  ok    task.md '# Goal' section\n  ok    task.md '# Rubrics' section\n  ok    run snapshot size 0.0 MiB\n  ok    program_0 sources pass harness inspection\nevaluator run: /home/user/auto-research/runs/_v3_validation/negative_programs/self_reported_score via harness wrapper\nevaluation outputs: /tmp/check-task-4xloh74a/programs/.evaluation_outputs/program_0/attempt_ee96efd2c70225b4\nevaluation runtime: /tmp/check-task-4xloh74a/programs/.evaluation_runtime/program_0/attempt_ee96efd2c70225b4\n[evaluate] candidate failed: candidate reported its own score fields ['score']; scores are computed by the evaluator\n  ok    evaluator finished in 0.2 s with exit code 0\n  ok    combined_score = -1000000000.0\n  ok    correct = False (candidate reported its own score fields ['score']; scores are computed by the evaluator)\nPASS\n"
+    },
+    {
+      "name": "negative_missing_artifact",
+      "expect": "incorrect",
+      "returncode": 0,
+      "seconds": 0.43,
+      "stdout_tail": "static checks: /home/user/auto-research/runs/_v3_validation/task_proto_mdp_policy_v1\n  ok    required files present; program_0 entrypoint resolves\n  ok    task.md '# Goal' section\n  ok    task.md '# Rubrics' section\n  ok    run snapshot size 0.0 MiB\n  ok    program_0 sources pass harness inspection\nevaluator run: /home/user/auto-research/runs/_v3_validation/negative_programs/missing_artifact via harness wrapper\nevaluation outputs: /tmp/check-task-ip3eclgr/programs/.evaluation_outputs/program_0/attempt_94a37c51087d717d\nevaluation runtime: /tmp/check-task-ip3eclgr/programs/.evaluation_runtime/program_0/attempt_94a37c51087d717d\n[evaluate] candidate failed: missing artifact policy.json\n  ok    evaluator finished in 0.3 s with exit code 0\n  ok    combined_score = -1000000000.0\n  ok    correct = False (missing artifact policy.json)\nPASS\n"
+    }
+  ]
+}

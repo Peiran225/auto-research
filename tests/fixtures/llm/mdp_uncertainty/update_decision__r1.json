@@ -1,0 +1,119 @@
+{
+  "answers": [
+    {
+      "question_id": "q1",
+      "statement": "No computation has run yet; all material is the initial (synthetic) reading.",
+      "epistemic_status": "inference",
+      "premise_ids": [],
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_mdp_bayes_adaptive",
+          "locator": "§2",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q2",
+      "statement": "It applies to CAND-A v1 and CAND-B v1; CAND-C was rejected as covered.",
+      "epistemic_status": "inference",
+      "premise_ids": [],
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_mdp_robust_rectangular",
+          "locator": "§2",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q3",
+      "statement": null,
+      "epistemic_status": "unknown",
+      "missing_information": "No judgement has changed in this round; novelty remains unknown for A and B."
+    },
+    {
+      "question_id": "q4",
+      "statement": "A and B stay unresolved (novelty unknown); no forced order.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q3"
+      ]
+    },
+    {
+      "question_id": "q5",
+      "statement": "The unknown most likely to change the choice is whether CAND-A survives a small exact instance; the exact enumeration pilot checks it.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q4"
+      ]
+    },
+    {
+      "question_id": "q6",
+      "statement": "Run the registered exact enumeration (H=2, p=1/2); unequal values refute CAND-A C1, equal values give finite support only; cost: one pilot.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q5"
+      ]
+    },
+    {
+      "question_id": "q7",
+      "statement": "Not a duplicate: no pilot has run.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q1"
+      ]
+    },
+    {
+      "question_id": "q8",
+      "statement": "Continue investigating.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q5"
+      ]
+    },
+    {
+      "question_id": "q9",
+      "statement": "No stop.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q8"
+      ]
+    }
+  ],
+  "payload": {
+    "new_evidence_refs": [],
+    "duplicate_evidence_refs": [],
+    "assessment_updates": [],
+    "ranking_changes": [],
+    "next_action": {
+      "action_type": "cpu_pilot",
+      "purpose": "preliminary_check",
+      "target_unknown_key": "cex_A",
+      "candidate_keys": [
+        "CAND-A"
+      ],
+      "inputs": {
+        "pilot_id": "mdp_exact_enumeration"
+      },
+      "expected_branches": [
+        {
+          "if": "values differ",
+          "then": "reject CAND-A v1; consider a narrower revision"
+        },
+        {
+          "if": "equal",
+          "then": "finite support only"
+        }
+      ],
+      "cost_cap": {
+        "pilots": 1
+      },
+      "why_now": "cheapest check that can disqualify a candidate"
+    },
+    "stop_recommendation": {
+      "stop": false
+    },
+    "revision_proposals": []
+  }
+}

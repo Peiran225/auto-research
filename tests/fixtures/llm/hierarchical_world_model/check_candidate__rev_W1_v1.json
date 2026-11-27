@@ -1,0 +1,130 @@
+{
+  "answers": [
+    {
+      "question_id": "q1",
+      "statement": "Nearest synthetic sources: bilevel latent dynamics (§2) and alternating multi-loss training (§2).",
+      "epistemic_status": "fact",
+      "basis_type": "source_report",
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_wm_bilevel_meta",
+          "locator": "§2",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q2",
+      "statement": "The bilevel source reports no planning benchmark, only prediction error.",
+      "epistemic_status": "fact",
+      "basis_type": "source_report",
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_wm_bilevel_meta",
+          "locator": "§3",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q3",
+      "statement": "The difference is substantive only if the levels have a real solution dependence.",
+      "epistemic_status": "inference",
+      "premise_ids": [],
+      "source_refs": [
+        {
+          "source_id": "paper_fixture_wm_multiloss_alternating",
+          "locator": "§1",
+          "read_scope": "partial_text"
+        }
+      ]
+    },
+    {
+      "question_id": "q4",
+      "statement": null,
+      "epistemic_status": "unknown",
+      "missing_information": "Novelty needs a live search; only synthetic fixtures were read."
+    },
+    {
+      "question_id": "q5",
+      "statement": "Depends on the undecided decision signal and on a runnable baseline.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q4"
+      ]
+    },
+    {
+      "question_id": "q6",
+      "statement": "A toy instance may separate nested from alternating training.",
+      "epistemic_status": "hypothesis",
+      "prediction": "different fixed points",
+      "falsification": "same fixed point"
+    },
+    {
+      "question_id": "q7",
+      "statement": "Run the CPU toy check first; the planning claim needs AI-Scientist-v3 with a real baseline.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q6"
+      ]
+    },
+    {
+      "question_id": "q8",
+      "statement": "Keep the planning claim pending; do not report toy results as world-model evidence.",
+      "epistemic_status": "inference",
+      "premise_ids": [
+        "q7"
+      ]
+    }
+  ],
+  "payload": {
+    "candidate_key": "W1",
+    "claim_checks": [
+      {
+        "claim_id": "C1",
+        "status": "unresolved",
+        "source_refs": [
+          "paper_fixture_wm_bilevel_meta#§2"
+        ],
+        "conditions": [
+          "actual solution dependence"
+        ],
+        "counterexample_status": "construction_to_check",
+        "checked_scope": "synthetic fixture papers"
+      }
+    ],
+    "assessments": [
+      {
+        "subject_key": "W1",
+        "subject_type": "candidate",
+        "dimension": "scientific_value",
+        "state": "known",
+        "judgment": "high",
+        "evidence_refs": [
+          "paper_fixture_wm_temporal_hierarchy#§2"
+        ],
+        "rationale": "planning return is the field's bottleneck (synthetic)"
+      },
+      {
+        "subject_key": "W1",
+        "subject_type": "candidate",
+        "dimension": "novelty",
+        "state": "unknown",
+        "judgment": null,
+        "evidence_refs": [],
+        "rationale": "no live search"
+      },
+      {
+        "subject_key": "W1",
+        "subject_type": "candidate",
+        "dimension": "feasibility",
+        "state": "known",
+        "judgment": "low",
+        "evidence_refs": [
+          "paper_fixture_wm_bilevel_meta#§3"
+        ],
+        "rationale": "W1 needs GPU-scale training via v3; W2 is cheap"
+      }
+    ]
+  }
+}

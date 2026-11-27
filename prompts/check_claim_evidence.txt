@@ -1,0 +1,6 @@
+template_version: check_claim_evidence-v1
+task_type: check_claim_evidence
+1. 这条 claim 由哪个实际产物支持？给出 artifact_id 与位置。
+2. 产物的协议版本与 claim 引用的候选版本、协议版本是否一致？
+3. 结论是否超出材料所支持的范围（实例、策略类、假设）？
+4. 反例或缺失项是什么？

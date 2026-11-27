@@ -1,0 +1,196 @@
+{
+  "config": {
+    "schema_version": 1,
+    "mode": "offline_local",
+    "llm": {
+      "provider": "fixture",
+      "model": null,
+      "api": null,
+      "requested_product": null,
+      "reasoning": null,
+      "mapping_verified_on": null,
+      "mapping_sources": [],
+      "allow_task_overrides": false,
+      "fallback_models": [],
+      "freeze_binding_per_run": true,
+      "credential_env": "OPENAI_API_KEY",
+      "request_timeout_seconds": 900.0,
+      "max_output_tokens_per_call": 8000,
+      "pricing": {}
+    },
+    "literature": {
+      "provider": "fixture",
+      "openalex_mailto_env": null,
+      "request_timeout_seconds": 30.0
+    },
+    "backend": {
+      "kind": "local",
+      "inherit_frontend_llm": false,
+      "checkout": null,
+      "pinned_commit": null,
+      "python": null,
+      "agsci": null,
+      "agent": {},
+      "container_enabled": true,
+      "phases": [
+        "investigation",
+        "ablations",
+        "posthoc",
+        "paper"
+      ],
+      "max_idea_cycles": 2,
+      "workers": 1,
+      "num_replications": 1,
+      "harness_evaluation_timeout_seconds": 1800,
+      "require_strict_budget": []
+    },
+    "decision": {
+      "strategy": "personalized_loop"
+    },
+    "limits": {
+      "max_rounds": 6,
+      "max_actions": 20,
+      "max_no_change_rounds": 2,
+      "max_retries_per_action": 1,
+      "max_candidates": 6,
+      "max_parallel_actions": 2,
+      "max_llm_calls": 40,
+      "max_input_tokens_total": 200000,
+      "max_output_tokens_total": 80000,
+      "max_search_queries": 24,
+      "max_full_text_reads": 12,
+      "max_pilots": 3,
+      "run_wall_seconds": 300.0,
+      "action_wall_seconds": 60.0,
+      "gpu_hours": 0.0,
+      "api_usd": 0.0
+    },
+    "reporting": {
+      "decision_language": "zh",
+      "manuscript_language": "en"
+    }
+  },
+  "task": {
+    "schema_version": 1,
+    "task_id": "mdp_uncertainty",
+    "idea": "MDP 里不同形式的不确定性是否等价",
+    "target_venues": [
+      "NeurIPS",
+      "ICML",
+      "ICLR",
+      "CoRL"
+    ],
+    "research_branch": "theoretical",
+    "metrics": {
+      "status": "undecided",
+      "primary": null,
+      "secondary": []
+    },
+    "clarification_requirements": [
+      "uncertainty_object",
+      "temporal_dependence",
+      "information_available_to_policy",
+      "decision_objective",
+      "policy_class",
+      "equivalence_definition"
+    ]
+  },
+  "profile_path": "profiles/peiran.yaml",
+  "profile_raw": {
+    "schema_version": 1,
+    "profile_id": "peiran",
+    "researcher": "Peiran Yu",
+    "expertise": [
+      {
+        "name": "optimization",
+        "scope": "general continuous optimization for machine learning",
+        "source": "user_context_2026-11-24",
+        "verified": false
+      },
+      {
+        "name": "bilevel optimization",
+        "scope": "stochastic / federated / Hessian-free bilevel methods and their convergence",
+        "source": "user_context_2026-11-24",
+        "supporting_titles_source": "research/profile/scholar_papers.json",
+        "verified": false
+      },
+      {
+        "name": "nonconvex minimax optimization",
+        "scope": "federated minimax methods and convergence guarantees",
+        "source": "user_context_2026-11-24",
+        "supporting_titles_source": "research/profile/scholar_papers.json",
+        "verified": false
+      },
+      {
+        "name": "convergence analysis",
+        "scope": "nonconvex rates, KL-property sequence convergence, generalized smoothness, shuffling methods",
+        "source": "user_context_2026-11-24",
+        "supporting_titles_source": "research/profile/scholar_papers.json",
+        "verified": false
+      },
+      {
+        "name": "optimization for machine learning",
+        "scope": "zeroth-order methods, LLM fine-tuning algorithms",
+        "source": "user_context_2026-11-24",
+        "verified": false
+      },
+      {
+        "name": "multimodal learning",
+        "scope": "stated by the user; no supporting publication metadata found in the Scholar listing",
+        "source": "user_context_2026-11-24",
+        "verified": false
+      }
+    ],
+    "research_interests": [
+      {
+        "name": "hierarchical world models",
+        "status": "recent_exploration",
+        "source": "user_context_2026-11-24"
+      },
+      {
+        "name": "MDP uncertainty",
+        "status": "recent_exploration",
+        "source": "user_context_2026-11-24"
+      },
+      {
+        "name": "personalized research agents",
+        "status": "recent_exploration",
+        "source": "user_context_2026-11-24"
+      }
+    ],
+    "taste_rules": [
+      {
+        "id": "TR1",
+        "rule": "prefer candidates with an explicit mechanism over purely empirical improvements",
+        "applies_when": "two candidates are otherwise tied on scientific value and feasibility",
+        "source": "inferred_from_discussion",
+        "confirmed_by_user": false
+      },
+      {
+        "id": "TR2",
+        "rule": "prefer comparisons under aligned conditions (same data, budget, policy class)",
+        "applies_when": "choosing a validation protocol",
+        "source": "inferred_from_discussion",
+        "confirmed_by_user": false
+      },
+      {
+        "id": "TR3",
+        "rule": "prefer claims whose scope matches the available evidence",
+        "applies_when": "deciding how broadly to state a result",
+        "source": "inferred_from_discussion",
+        "confirmed_by_user": false
+      },
+      {
+        "id": "TR4",
+        "rule": "prefer results that guide later choices (conditions, counterexamples) over isolated numbers",
+        "applies_when": "two candidates are otherwise tied",
+        "source": "inferred_from_discussion",
+        "confirmed_by_user": false
+      }
+    ],
+    "constraints": []
+  },
+  "task_path": "examples/mdp_uncertainty.yaml",
+  "config_path": "configs/offline.yaml",
+  "task_file_sha256": "ee68ad4bdd153bb5099e33847f8938ee6c42fff47a3988bec690965c9999dffe"
+}

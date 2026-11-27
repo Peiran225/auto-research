@@ -1,0 +1,31 @@
+{
+  "setting": {
+    "a": 1.0,
+    "lam": 0.5,
+    "c": 1.0,
+    "steps": 2000,
+    "lr": 0.05
+  },
+  "closed_form": {
+    "k": 0.6666666666666666,
+    "x_nested": 1.6153846153846152,
+    "y_nested": 1.0769230769230766,
+    "x_alternating": 1.0,
+    "y_alternating": 0.6666666666666666
+  },
+  "numerical": {
+    "nested": {
+      "x": 1.6153846153846148,
+      "y": 1.0769230769230764,
+      "upper_objective": 1.2307692307692308
+    },
+    "alternating": {
+      "x": 0.9999999999999996,
+      "y": 0.6666666666666661,
+      "upper_objective": 1.7777777777777795
+    }
+  },
+  "numerical_matches_closed_form": true,
+  "upper_objective_gap": 0.5470085470085486,
+  "status": "clarification pilot on a toy quadratic; not evidence about world models"
+}
