@@ -1,0 +1,9 @@
+请在当前 ~/auto-research 项目中完成一次实际改造。
+
+先完整读取 CLAUDE_IMPLEMENTATION_TASK.md、WORK_RESEARCH_PLAN.md，以及当前 AGENTS.md、CLAUDE.md、README、CODEX_IMPLEMENTATION_PLAN.md、IMPLEMENTATION_STATUS.md。当前任务以用户已经确认的分工为准：ChatGPT Work 执行 Q1–Q5 科研与结果分析；代码由 Claude Code 编写；正式实验、消融和实验初稿由 AI-Scientist-v3 编排，内部 coding agent 选择 Claude；学校服务器计算。
+
+请按 CLAUDE_IMPLEMENTATION_TASK.md 实现独立实验入口、必要的配置/来源适配、持久任务与结果交接、真实 Claude/v3 认证检查和需要的 prepare 入口。复用现有代码，不重新实现 M0–M8，不通过旧 pra run 再调用前端科研 API，也不把 Work 输出标成 fixture。
+
+保留现有未提交工作和旧计划。先完成 CPU 小闭环与必要测试，输出 docs/WORK_COMMANDS.md 和 WORK_INTEGRATION_STATUS.md。已有适用的明确后端授权预算时在范围内推进；没有时不要自行启动收费 campaign 或 GPU 训练。缺桌面 Work 接入时完成服务器可做的全部部分，不能假称用户桌面验收通过。
+
+这是实施任务，请写实际代码、配置、必要测试和文档并执行可做的验证，不只返回另一份计划。不要推送远程仓库。最后给我最短的桌面 Work 启动指令、已验证命令、真实产物路径和剩余具体缺项。
